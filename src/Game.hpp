@@ -46,6 +46,9 @@ class Game
 
 public:
 
+    static const int GAME_WIDTH = 160;
+    static const int GAME_HEIGHT = 144;
+
     Game(LX_Win::LX_Window& w);
 
     void loop();
