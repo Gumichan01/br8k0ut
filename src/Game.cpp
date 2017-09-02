@@ -1,3 +1,4 @@
+
 /*
 *   Br8k0ut - Platform Video game
 *   Copyright © 2017 Luxon Jean-Pierre
@@ -20,49 +21,82 @@
 *   mail: luxon.jean.pierre@gmail.com
 */
 
-
-#include <LunatiX/Lunatix.hpp>
-
 #include "Game.hpp"
+
+#include <LunatiX/LX_Window.hpp>
+#include <LunatiX/LX_Timer.hpp>
 
 using namespace LX_Event;
 
-namespace
+Game::Game(LX_Win::LX_Window& w) : win(w)
 {
-
-const int GAME_WIDTH = 160;
-const int GAME_HEIGHT = 144;
 
 }
 
-int main(int argc, char** argv)
+
+void Game::loop()
 {
-    LX_AABB position = {0,0,36,26};
-    LX_EventHandler ev;
-
-    if(!LX_Init())
+    bool done = false;
+    while(!done)
     {
-        LX_Log::log("Cannot load the library: %s",LX_GetError());
-        return -1;
+        if((done = input()) == true)
+            continue;
+
+        physics();
+        status();
+        clean();
+        display();
+    }
+}
+
+
+bool Game::input()
+{
+    bool done = false;
+    while(ev.pollEvent())
+    {
+        switch(ev.getEventType())
+        {
+        case LX_EventType::LX_QUIT:
+            done = true;
+            break;
+        default:
+            break;
+        }
     }
 
-    // Information about how to build the window
-    LX_Win::LX_WindowInfo info;
-    LX_Win::LX_loadWindowConfig(info);
-    info.title = "Br8k0ut";
-    info.w = GAME_WIDTH;
-    info.h = GAME_HEIGHT;
-
-    LX_Win::LX_Window w(info);
-    LX_Win::LX_WindowManager::getInstance()->addWindow(&w);
-
-    {
-        Game g(w);
-        g.loop();
-    }
+    return done;
+}
 
 
-    LX_Win::LX_WindowManager::getInstance()->clearWindows();
-    LX_Quit();
-    return 0;
+
+void Game::physics()
+{
+    /// @todo handle collision detection, gravity
+}
+
+
+void Game::status()
+{
+    /// @todo update status (player, bullets)
+}
+
+void Game::clean()
+{
+    /// @todo clean (necessary?)
+}
+
+void Game::display()
+{
+    win.clearWindow();
+    win.update();
+    LX_Timer::delay(33);
+}
+
+
+
+
+Game::~Game()
+{
+
 }
