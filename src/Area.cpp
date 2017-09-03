@@ -132,16 +132,21 @@ void Area::parseMap(const std::string& map_string)
             it++;
             j++;
         }
+
+        acount++;
     }
 }
 
 void Area::draw()
 {
     /// @todo draw the level
-    /*for(size_t i = 0; i < GAME_HEIGHT; ++i)
+    for(auto& arr : gtiles)
     {
-
-    }*/
+        for(GTile& tile: arr)
+        {
+            sprites[tile.id_sprite]->draw(&tile.rect);
+        }
+    }
 
 }
 
