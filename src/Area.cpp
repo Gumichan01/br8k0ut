@@ -27,8 +27,12 @@
 #include <LunatiX/LX_WindowManager.hpp>
 #include <LunatiX/LX_Window.hpp>
 #include <LunatiX/LX_Log.hpp>
+
 #include <TMXParser.h>
 #include <TSXParser.h>
+#include <sstream>
+#include <cstdlib>
+#include <regex>
 
 
 namespace
@@ -41,7 +45,6 @@ using namespace LX_Win;
 
 Area::Area(unsigned int lvl): level_id(lvl)
 {
-    /// @todo build the area
     TMX::Parser tmx;
 
     LX_Log::log("TMX");
@@ -81,7 +84,6 @@ Area::Area(unsigned int lvl): level_id(lvl)
     {
         LX_Log::log("Tile: %d - %s", tile.id, (MAP_PATH + tile.img.name).c_str());
         sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_BGR24));
-        /// @todo store the pair. id/name
     }
 
     LX_Log::log("END TSX\n");
@@ -90,6 +92,26 @@ Area::Area(unsigned int lvl): level_id(lvl)
 void Area::parseMap(const std::string& map_string)
 {
     /// @todo convert map_string too gmap
+    const std::regex CSV_FORMAT("[[:digit:]]+", std::regex::extended);
+
+    std::istringstream stream(map_string);
+    std::string line;
+    size_t acount = 0;
+
+    while(std::getline(stream, line))
+    {
+        LX_Log::log("%s\n", line.c_str());
+        std::regex_iterator<std::string::iterator> it(line.begin(), line.end(), CSV_FORMAT);
+        std::regex_iterator<std::string::iterator> it_end;
+        size_t j = 0;
+
+        while(it != it_end)
+        {
+            gmap[acount][j] = std::atoi(it->str().c_str());
+            it++;
+            j++;
+        }
+    }
 }
 
 void Area::draw()
