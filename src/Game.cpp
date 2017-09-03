@@ -22,6 +22,7 @@
 */
 
 #include "Game.hpp"
+#include "Area.hpp"
 
 #include <LunatiX/LX_Window.hpp>
 #include <LunatiX/LX_Timer.hpp>
@@ -30,7 +31,10 @@ using namespace LX_Event;
 
 Game::Game(LX_Win::LX_Window& w) : win(w)
 {
-
+    for(unsigned int i = 1; i <= NB_LEVELS; ++i)
+    {
+        areas.push_back(new Area(i));
+    }
 }
 
 
@@ -98,5 +102,10 @@ void Game::display()
 
 Game::~Game()
 {
+    for(size_t i = 0; i < areas.size(); ++i)
+    {
+        delete areas[i];
+    }
 
+    areas.clear();
 }

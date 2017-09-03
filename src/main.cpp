@@ -46,6 +46,8 @@ int main(int argc, char** argv)
         return -1;
     }
 
+    LX_Log::setDebugMode();     /// Remove it in realease mode
+
     // Information about how to build the window
     LX_Win::LX_WindowInfo info;
     LX_Win::LX_loadWindowConfig(info);

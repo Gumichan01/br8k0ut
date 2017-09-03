@@ -33,9 +33,13 @@ namespace LX_Win
 class LX_Window;
 }
 
+class Area;
+
 class Game
 {
-    //std::vector<Area*> areas;
+    static const unsigned int NB_LEVELS = 1;
+
+    std::vector<Area*> areas;
     //std::vector<Shooter*> shooter;
 
     LX_Win::LX_Window& win;

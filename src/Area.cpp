@@ -59,7 +59,13 @@ Area::Area(unsigned int lvl): level_id(lvl)
     LX_Log::log("Map Version: %s", tmx.mapInfo.version.c_str());
     LX_Log::log("Tileset [ Source: %s ]", tmx.tilesetList[0].source.c_str());
 
-    /// @todo Get the map
+    const auto it = tmx.tileLayer.begin();
+    LX_Log::log("Tile Layer Data contents:");
+
+    if(LX_Log::isDebugMode())
+        std::cout << tmx.tileLayer[it->first].data.contents << std::endl;
+
+
     LX_Log::log("END TMX\n");
 
     LX_Log::log("TSX");
