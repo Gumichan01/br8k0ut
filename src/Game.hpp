@@ -39,6 +39,8 @@ class Game
 {
     static const unsigned int NB_LEVELS = 1;
 
+    int lvl_count;
+    bool exit_status;
     std::vector<Area*> areas;
     //std::vector<Shooter*> shooter;
 
@@ -55,6 +57,7 @@ public:
 
     Game(LX_Win::LX_Window& w);
 
+    void play();
     void loop();
     // The game logic
     bool input();

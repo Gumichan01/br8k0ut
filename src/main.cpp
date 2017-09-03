@@ -60,7 +60,7 @@ int main(int argc, char** argv)
 
     {
         Game g(w);
-        g.loop();
+        g.play();
     }
 
 

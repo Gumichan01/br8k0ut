@@ -29,11 +29,21 @@
 
 using namespace LX_Event;
 
-Game::Game(LX_Win::LX_Window& w) : win(w)
+Game::Game(LX_Win::LX_Window& w) : lvl_count(0), exit_status(false), win(w)
 {
     for(unsigned int i = 1; i <= NB_LEVELS; ++i)
     {
         areas.push_back(new Area(i));
+    }
+}
+
+
+void Game::play()
+{
+    while(lvl_count < NB_LEVELS && !exit_status)
+    {
+        loop();
+        lvl_count++;
     }
 }
 
@@ -63,6 +73,7 @@ bool Game::input()
         {
         case LX_EventType::LX_QUIT:
             done = true;
+            exit_status = true;
             break;
         default:
             break;
@@ -96,8 +107,6 @@ void Game::display()
     win.update();
     LX_Timer::delay(33);
 }
-
-
 
 
 Game::~Game()
