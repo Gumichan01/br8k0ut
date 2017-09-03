@@ -39,7 +39,7 @@ class Game
 {
     static const unsigned int NB_LEVELS = 1;
 
-    int lvl_count;
+    unsigned int lvl_count;
     bool exit_status;
     std::vector<Area*> areas;
     //std::vector<Shooter*> shooter;

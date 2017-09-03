@@ -104,6 +104,7 @@ void Game::clean()
 void Game::display()
 {
     win.clearWindow();
+    areas.at(lvl_count)->draw();
     win.update();
     LX_Timer::delay(33);
 }
