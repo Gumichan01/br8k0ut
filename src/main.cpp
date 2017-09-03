@@ -37,7 +37,6 @@ const int GAME_HEIGHT = 144;
 
 int main(int argc, char** argv)
 {
-    LX_AABB position = {0,0,36,26};
     LX_EventHandler ev;
 
     if(!LX_Init())
