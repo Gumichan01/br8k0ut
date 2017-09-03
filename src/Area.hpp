@@ -53,9 +53,9 @@ class Area
 
 public:
 
-Area(unsigned int lvl);
-void draw();
-~Area();
+    Area(unsigned int lvl);
+    void draw();
+    ~Area();
 
 };
 

@@ -78,12 +78,12 @@ bool Game::input()
             break;
 
         case LX_EventType::LX_KEYUP:
-        if(ev.getKeyCode() == SDLK_f)
-        {
-            win.toggleFullscreen(full ? LX_Win::LX_WINDOW_NO_FULLSCREEN : LX_Win::LX_WINDOW_FULLSCREEN);
-            full = !full;
-        }
-        break;
+            if(ev.getKeyCode() == SDLK_f)
+            {
+                win.toggleFullscreen(full ? LX_Win::LX_WINDOW_NO_FULLSCREEN : LX_Win::LX_WINDOW_FULLSCREEN);
+                full = !full;
+            }
+            break;
 
         default:
             break;
