@@ -93,15 +93,16 @@ Area::Area(unsigned int lvl): level_id(lvl)
 
     int i = 0;
 
-    for(auto& arr : gaabb)
+    for(auto& arr : gtiles)
     {
         int j = 0;
-        arr.fill({0,0,SPRITE_W, SPRITE_H});
 
         for(size_t k = 0; k < arr.size(); ++k)
         {
-            arr[j].x = j * SPRITE_W;
-            arr[j].y = i * SPRITE_H;
+            arr[j].rect.x = j * SPRITE_W;
+            arr[j].rect.y = i * SPRITE_H;
+            arr[j].rect.w = SPRITE_W;
+            arr[j].rect.h = SPRITE_H;
             j++;
         }
 
@@ -126,7 +127,8 @@ void Area::parseMap(const std::string& map_string)
 
         while(it != it_end)
         {
-            gmap[acount][j] = std::atoi(it->str().c_str());
+            gtiles[acount][j].id_tile = std::atoi(it->str().c_str());
+            gtiles[acount][j].id_sprite = gtiles[acount][j].id_tile - 1;
             it++;
             j++;
         }
@@ -136,6 +138,11 @@ void Area::parseMap(const std::string& map_string)
 void Area::draw()
 {
     /// @todo draw the level
+    /*for(size_t i = 0; i < GAME_HEIGHT; ++i)
+    {
+
+    }*/
+
 }
 
 Area::~Area()

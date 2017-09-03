@@ -35,12 +35,19 @@ namespace LX_Graphics
 class LX_Sprite;
 }
 
+struct GTile
+{
+    unsigned int id_tile;
+    unsigned int id_sprite;
+    LX_AABB rect;
+};
+
+
 class Area
 {
     unsigned int level_id;
     std::vector<LX_Graphics::LX_Sprite*> sprites;
-    std::array<std::array<LX_AABB, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gaabb;
-    std::array<std::array<unsigned int, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gmap;
+    std::array<std::array<GTile, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gtiles;
 
     void parseMap(const std::string& map_string);
 
