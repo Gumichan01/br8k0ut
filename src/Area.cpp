@@ -120,7 +120,9 @@ void Area::parseMap(const std::string& map_string)
 
     while(std::getline(stream, line))
     {
-        LX_Log::log("%s\n", line.c_str());
+        if(line.empty() || line.length() == 1)
+            continue;
+
         std::regex_iterator<std::string::iterator> it(line.begin(), line.end(), CSV_FORMAT);
         std::regex_iterator<std::string::iterator> it_end;
         size_t j = 0;
