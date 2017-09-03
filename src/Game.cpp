@@ -66,6 +66,7 @@ void Game::loop()
 
 bool Game::input()
 {
+    static bool full = false;
     bool done = false;
     while(ev.pollEvent())
     {
@@ -75,6 +76,15 @@ bool Game::input()
             done = true;
             exit_status = true;
             break;
+
+        case LX_EventType::LX_KEYUP:
+        if(ev.getKeyCode() == SDLK_f)
+        {
+            win.toggleFullscreen(full ? LX_Win::LX_WINDOW_NO_FULLSCREEN : LX_Win::LX_WINDOW_FULLSCREEN);
+            full = !full;
+        }
+        break;
+
         default:
             break;
         }
