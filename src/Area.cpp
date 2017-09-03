@@ -65,6 +65,7 @@ Area::Area(unsigned int lvl): level_id(lvl)
     if(LX_Log::isDebugMode())
         std::cout << tmx.tileLayer[it->first].data.contents << std::endl;
 
+    parseMap(tmx.tileLayer[it->first].data.contents);
 
     LX_Log::log("END TMX\n");
 
@@ -86,6 +87,10 @@ Area::Area(unsigned int lvl): level_id(lvl)
     LX_Log::log("END TSX\n");
 }
 
+void Area::parseMap(const std::string& map_string)
+{
+    /// @todo convert map_string too gmap
+}
 
 void Area::draw()
 {

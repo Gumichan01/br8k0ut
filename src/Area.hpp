@@ -38,7 +38,9 @@ class Area
 {
     unsigned int level_id;
     std::vector<LX_Graphics::LX_Sprite*> sprites;
-    std::array<std::array<int, Game::GAME_WIDTH>, Game::GAME_HEIGHT> map;
+    std::array<std::array<int, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gmap;
+
+    void parseMap(const std::string& map_string);
 
 public:
 
