@@ -38,6 +38,8 @@
 namespace
 {
 const std::string MAP_PATH("./data/map/");
+const int SPRITE_W = 8;
+const int SPRITE_H = 8;
 }
 
 using namespace LX_Graphics;
@@ -68,6 +70,7 @@ Area::Area(unsigned int lvl): level_id(lvl)
     if(LX_Log::isDebugMode())
         std::cout << tmx.tileLayer[it->first].data.contents << std::endl;
 
+    // Convert the map
     parseMap(tmx.tileLayer[it->first].data.contents);
 
     LX_Log::log("END TMX\n");
@@ -87,11 +90,27 @@ Area::Area(unsigned int lvl): level_id(lvl)
     }
 
     LX_Log::log("END TSX\n");
+
+    int i = 0;
+
+    for(auto& arr : gaabb)
+    {
+        int j = 0;
+        arr.fill({0,0,SPRITE_W, SPRITE_H});
+
+        for(size_t k = 0; k < arr.size(); ++k)
+        {
+            arr[j].x = j * SPRITE_W;
+            arr[j].y = i * SPRITE_H;
+            j++;
+        }
+
+        i++;
+    }
 }
 
 void Area::parseMap(const std::string& map_string)
 {
-    /// @todo convert map_string too gmap
     const std::regex CSV_FORMAT("[[:digit:]]+", std::regex::extended);
 
     std::istringstream stream(map_string);
