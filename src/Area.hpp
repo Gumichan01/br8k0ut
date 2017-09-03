@@ -27,8 +27,12 @@
 
 #include "Game.hpp"
 
-#include <LunatiX/LX_Graphics.hpp>
 #include <array>
+
+namespace LX_Graphics
+{
+class LX_Sprite;
+}
 
 class Area
 {
