@@ -37,11 +37,11 @@ namespace
 const FloatPosition DFPOS = {0.0f, 0.0f};
 const std::string PLAYER_PATH("./data/image/player.png");
 
-const float MAX_SPEED = 3.5f;
+const float MAX_SPEED = 3.0f;
 const float STEP_UP = 0.5f;
 const float STEP_DOWN = 1.0f;
 
-const float GRAVITY = 0.98f;
+const float GRAVITY = 2.098f;
 const float JUMP    = -2.0f;
 
 bool slow = true;
@@ -103,7 +103,7 @@ void Player::draw()
     else
         sprite->draw(&position, 0.0f, LX_Graphics::LX_MIRROR_HORIZONTAL);
 
-    LX_Log::log("posd: %d %d", position.x, position.y);
+    //LX_Log::log("posd: %d %d", position.x, position.y);
 }
 
 
@@ -165,7 +165,7 @@ void Player::move()
 {
     fpos += speed;
     fpos.toPixelUnit(position);
-    LX_Log::log("posm: %d %d", position.x, position.y);
+    //LX_Log::log("posm: %d %d", position.x, position.y);
 }
 
 bool Player::collision(const Area& area)
@@ -178,7 +178,7 @@ bool Player::collision(const Area& area)
             {
                 if(tile.type == Area::TYPE_SOLID)
                 {
-                    LX_Log::log("posc1: %d %d", position.x, position.y);
+                    //LX_Log::log("posc1: %d %d", position.x, position.y);
                     if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
                     {
                         fpos.y = tile.rect.y - position.h;
@@ -191,32 +191,37 @@ bool Player::collision(const Area& area)
                         position.y = tile.rect.y + position.h;
                         speed.vy = 0.0f;
                     }
-                    LX_Log::log("posc2: %d %d", position.x, position.y);
+                    //LX_Log::log("posc2: %d %d", position.x, position.y);
                 }
                 else if(tile.type == Area::TYPE_DEATH)
                 {
-                    position.x = area.getStart().x;
-                    position.y = area.getStart().y;
+                    fpos = area.getStart();
+                    position = area.getStart();
                     speed *= 0.0f;
                 }
                 else if(tile.type == Area::TYPE_EXIT)
                     return true;
-                else
-                {
-                    if(i < area.gtiles.size() -1)
-                    {
-                        auto it = std::find_if(area.gtiles[i+1].begin(),
-                                               area.gtiles[i+1].end(),
-                                               [this](const GTile & gt)
-                        {
-                            return position.x == gt.rect.x;
-                        });
+            }
 
-                        if(it != area.gtiles[i+1].end() && (*it).type ==  Area::TYPE_NONE)
-                        {
-                            speed.vy = GRAVITY;
-                        }
-                    }
+            if(i < area.gtiles.size() -1)
+            {
+                auto it = std::find_if(area.gtiles[i+1].begin(),
+                                       area.gtiles[i+1].end(),
+                                       [this](const GTile & gt)
+                {
+                    int dx = position.x - gt.rect.x;
+                    int dy = gt.rect.y - position.y;
+
+                    return dx > 0 && dx < 8 && dy > 0 && dy <= 8
+                           && (gt.type ==  Area::TYPE_NONE || gt.type ==  Area::TYPE_DEATH);
+                });
+
+                //LX_Log::log("posc3: %d %d", position.x, position.y);
+
+                if(it != area.gtiles[i+1].end())
+                {
+                    LX_Log::log("posc4: %d %d", position.x, position.y);
+                    speed.vy = GRAVITY;
                 }
             }
         }

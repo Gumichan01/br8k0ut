@@ -129,7 +129,7 @@ void Game::display()
     areas.at(lvl_count)->draw();
     player->draw();
     win.update();
-    LX_Timer::delay(33);
+    LX_Timer::delay(16);
 }
 
 
