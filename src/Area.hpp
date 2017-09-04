@@ -29,6 +29,7 @@
 
 #include <LunatiX/LX_AABB.hpp>
 #include <array>
+#include <string>
 
 namespace LX_Graphics
 {
@@ -62,6 +63,12 @@ class Area
     void parseMap(const std::string& map_string);
 
 public:
+
+    static const std::string TYPE_NONE;
+    static const std::string TYPE_SOLID;
+    static const std::string TYPE_START;
+    static const std::string TYPE_DEATH;
+
 
     Area(unsigned int lvl);
     void draw();

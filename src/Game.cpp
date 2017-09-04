@@ -106,6 +106,7 @@ bool Game::input()
 void Game::physics()
 {
     /// @todo handle collision detection, gravity
+    player->collision(*areas[lvl_count]);
 }
 
 

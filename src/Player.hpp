@@ -40,6 +40,7 @@ namespace LX_Physics
 struct LX_Circle;
 }
 
+class Area;
 
 struct FloatPosition
 {
@@ -72,6 +73,8 @@ public:
     void draw();
     void input(const LX_Event::LX_EventHandler& ev);
     void move();
+
+    void collision(const Area& area);
 
     const LX_AABB& getPos();
 

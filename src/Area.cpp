@@ -39,11 +39,6 @@ namespace
 {
 const std::string MAP_PATH("./data/map/");
 
-const std::string TYPE_NONE("none");
-const std::string TYPE_SOLID("solid");
-const std::string TYPE_START("start");
-const std::string TYPE_DEATH("death");
-
 const int SPRITE_W = 8;
 const int SPRITE_H = 8;
 
@@ -51,6 +46,12 @@ const int SPRITE_H = 8;
 
 using namespace LX_Graphics;
 using namespace LX_Win;
+
+const std::string Area::TYPE_NONE = "none";
+const std::string Area::TYPE_SOLID = "solid";
+const std::string Area::TYPE_START ="start";
+const std::string Area::TYPE_DEATH = "death";
+
 
 Area::Area(unsigned int lvl): level_id(lvl)
 {

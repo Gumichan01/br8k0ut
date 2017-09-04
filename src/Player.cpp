@@ -23,10 +23,12 @@
 
 
 #include "Player.hpp"
+#include "Area.hpp"
 
 #include <LunatiX/LX_Hitbox.hpp>
 #include <LunatiX/LX_WindowManager.hpp>
 #include <LunatiX/LX_Graphics.hpp>
+#include <LunatiX/LX_Physics.hpp>
 #include <LunatiX/LX_Log.hpp>
 
 
@@ -43,6 +45,7 @@ bool slow = true;
 }
 
 using namespace LX_Win;
+using namespace LX_Physics;
 
 /// Floating-point coordinates
 
@@ -160,6 +163,30 @@ void Player::move()
 {
     fpos += speed;
     fpos.toPixelUnit(position);
+}
+
+void Player::collision(const Area& area)
+{
+    for(auto& arr : area.gtiles)
+    {
+        for(const GTile& tile: arr)
+        {
+            if(collisionRect(position, tile.rect))
+            {
+                if(tile.type == Area::TYPE_SOLID)
+                {
+                    if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
+                    {
+                        position.y = tile.rect.y - position.h;
+                    }
+                    else if (speed.vy < 0.0f && tile.rect.y + tile.rect.h > position.y)
+                    {
+                        position.y = tile.rect.y + position.h;
+                    }
+                }
+            }
+        }
+    }
 }
 
 
