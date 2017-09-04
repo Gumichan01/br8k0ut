@@ -73,6 +73,7 @@ bool Game::input()
 {
     static bool full = false;
     bool done = false;
+
     while(ev.pollEvent())
     {
         switch(ev.getEventType())
@@ -88,17 +89,14 @@ bool Game::input()
                 win.toggleFullscreen(full ? LX_Win::LX_WINDOW_NO_FULLSCREEN : LX_Win::LX_WINDOW_FULLSCREEN);
                 full = !full;
             }
-            else
-                player->input(ev);
             break;
 
-        case LX_EventType::LX_KEYDOWN:
-            player->input(ev);
-            break;
         default:
             break;
         }
     }
+
+    player->input(ev);
 
     return done;
 }

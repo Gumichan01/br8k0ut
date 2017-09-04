@@ -34,6 +34,12 @@ namespace
 {
 const FloatPosition DFPOS = {0.0f, 0.0f};
 const std::string PLAYER_PATH("./data/image/player.png");
+
+const float MAX_SPEED = 3.5f;
+const float STEP_UP = 0.5f;
+const float STEP_DOWN = 1.0f;
+
+bool slow = true;
 }
 
 using namespace LX_Win;
@@ -81,6 +87,7 @@ Player::Player(const LX_AABB& pos): sprite(nullptr), fpos(DFPOS), position(pos)
     LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
     sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win, LX_PIXELFORMAT_RGB888);
     fpos = position;
+    speed *= 0.0f;
 }
 
 void Player::draw()
@@ -94,20 +101,54 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
     if(ev.getEventType() ==  LX_Event::LX_EventType::LX_KEYDOWN)
     {
         if(ev.getKeyCode() == SDLK_LEFT)
-            speed.vx = -2.0f;
+        {
+            slow = false;
+
+            if(speed.vx > -MAX_SPEED)
+                speed.vx -= STEP_UP;
+            else
+                speed.vx = -MAX_SPEED;
+        }
 
         else if(ev.getKeyCode() == SDLK_RIGHT)
-            speed.vx = 2.0f;
+        {
+            slow = false;
+
+            if(speed.vx < MAX_SPEED)
+                speed.vx += STEP_UP;
+            else
+                speed.vx = MAX_SPEED;
+        }
     }
 
     if(ev.getEventType() == LX_Event::LX_EventType::LX_KEYUP)
     {
         if(ev.getKeyCode() == SDLK_LEFT || ev.getKeyCode() == SDLK_RIGHT)
-            speed.vx = 0.0f;
+            slow = true;
     }
 
     if(ev.getKeyCode() == SDLK_SPACE)
         LX_Log::log("JUMP");
+
+    if(slow)
+    {
+        if(speed.vx > 0.0f)
+        {
+            if(speed.vx - STEP_DOWN < 0.0f)
+                speed.vx = 0.0f;
+            else
+                speed.vx -= STEP_DOWN;
+        }
+        else if(speed.vx < 0.0f)
+        {
+            if(speed.vx + STEP_DOWN > 0.0f)
+                speed.vx = 0.0f;
+            else
+                speed.vx += STEP_DOWN;
+        }
+    }
+
+    LX_Log::log("speed x: %f", speed.vx);
 }
 
 
