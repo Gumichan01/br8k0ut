@@ -53,7 +53,7 @@ struct Type
 class Area
 {
     unsigned int level_id;
-    std::vector<Type> vtypes;
+    std::vector<Type*> vtypes;
     std::vector<LX_Graphics::LX_Sprite*> sprites;
     std::array<std::array<GTile, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gtiles;
 
@@ -63,8 +63,10 @@ public:
 
     Area(unsigned int lvl);
     void draw();
-    ~Area();
 
+    const LX_AABB getStart();
+
+    ~Area();
 };
 
 #endif // AREA_HPP_INCLUDED

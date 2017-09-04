@@ -77,9 +77,6 @@ Area::Area(unsigned int lvl): level_id(lvl)
     if(LX_Log::isDebugMode())
         std::cout << tmx.tileLayer[it->first].data.contents << std::endl;
 
-    // Convert the map
-    parseMap(tmx.tileLayer[it->first].data.contents);
-
     LX_Log::log("END TMX\n");
 
     LX_Log::log("TSX");
@@ -94,10 +91,15 @@ Area::Area(unsigned int lvl): level_id(lvl)
     {
         LX_Log::log("Tile: %d - %s", tile.id, (MAP_PATH + tile.img.name).c_str());
         sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_RGB888));
-        vtypes.push_back(Type{tile.id, tile.type});
+        Type *t = new Type();
+        *t = {tile.id + 1, tile.type};
+        vtypes.push_back(t);
     }
 
     LX_Log::log("END TSX\n");
+
+    /// Convert the map
+    parseMap(tmx.tileLayer[it->first].data.contents);
 
     int i = 0;
 
@@ -141,13 +143,13 @@ void Area::parseMap(const std::string& map_string)
             gtiles[acount][j].id_sprite = gtiles[acount][j].id_tile - 1;
 
             int tmp_id = gtiles[acount][j].id_tile;
-            auto it = std::find_if(vtypes.begin(), vtypes.end(), [&tmp_id](const Type& ty)
+            auto itf = std::find_if(vtypes.begin(), vtypes.end(), [&tmp_id](const Type* ty)
             {
-                return ty.id == tmp_id;
+                return ty->id == tmp_id;
             });
 
-            if(it != vtypes.end())
-                gtiles[acount][j].type = it->label;
+            if(itf != vtypes.end())
+                gtiles[acount][j].type = (*itf)->label;
             else
                 gtiles[acount][j].type = TYPE_NONE;
 
@@ -165,11 +167,44 @@ void Area::draw()
     {
         for(GTile& tile: arr)
         {
+            if(tile.type == TYPE_START)
+                LX_Log::log("%d %d %d %d", tile.rect.x, tile.rect.y, tile.rect.w, tile.rect.h);
+
             sprites[tile.id_sprite]->draw(&tile.rect);
         }
     }
 
 }
+
+
+const LX_AABB Area::getStart()
+{
+    bool found = false;
+    size_t i = 0;
+    LX_AABB aabb;
+
+    while(i < gtiles.size() && !found)
+    {
+        auto it = std::find_if(gtiles[i].begin(), gtiles[i].end(), [](const GTile& gt)
+        {
+            return gt.type == TYPE_START;
+        });
+
+        if(it != gtiles[i].end())
+        {
+            aabb = it->rect;
+            found = true;
+        }
+
+        i++;
+    }
+
+    if(found)
+        return aabb;
+
+    throw std::string("An area must have a start point");
+}
+
 
 Area::~Area()
 {
@@ -178,5 +213,11 @@ Area::~Area()
         delete sprites[i];
     }
 
+    for(size_t j = 0; j < vtypes.size(); ++j)
+    {
+        delete vtypes[j];
+    }
+
     sprites.clear();
+    vtypes.clear();
 }
