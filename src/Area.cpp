@@ -86,7 +86,7 @@ Area::Area(unsigned int lvl): level_id(lvl)
     for(TSX::Parser::Tile& tile: tsx.tileList)
     {
         LX_Log::log("Tile: %d - %s", tile.id, (MAP_PATH + tile.img.name).c_str());
-        sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_BGR24));
+        sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_RGB888));
     }
 
     LX_Log::log("END TSX\n");
@@ -141,7 +141,6 @@ void Area::parseMap(const std::string& map_string)
 
 void Area::draw()
 {
-    /// @todo draw the level
     for(auto& arr : gtiles)
     {
         for(GTile& tile: arr)
