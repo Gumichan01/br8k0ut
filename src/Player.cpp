@@ -73,7 +73,9 @@ void FloatPosition::toPixelUnit(LX_AABB& aabb)
 }
 
 
-Player::Player(LX_AABB& pos): sprite(nullptr), fpos(DFPOS), position(pos)
+/// Player
+
+Player::Player(const LX_AABB& pos): sprite(nullptr), fpos(DFPOS), position(pos)
 {
     LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
     sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win, LX_PIXELFORMAT_RGB888);

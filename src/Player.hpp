@@ -26,6 +26,7 @@
 #define PLAYER_HPP_INCLUDED
 
 #include <LunatiX/LX_AABB.hpp>
+#include <LunatiX/LX_Vector2D.hpp>
 
 
 namespace LX_Graphics
@@ -36,7 +37,6 @@ class LX_Sprite;
 namespace LX_Physics
 {
 struct LX_Circle;
-struct LX_Vector2D;
 }
 
 
@@ -62,10 +62,11 @@ class Player
     LX_Graphics::LX_Sprite *sprite;
     FloatPosition fpos;
     LX_AABB position;
+    LX_Physics::LX_Vector2D speed;
 
 public:
 
-    Player(LX_AABB& pos);
+    Player(const LX_AABB& pos);
 
     void draw();
     void move();
