@@ -36,6 +36,8 @@ class LX_Window;
 class Area;
 class Player;
 
+/// @todo store the start point
+
 class Game
 {
     static const unsigned int NB_LEVELS = 1;
