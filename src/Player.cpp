@@ -41,6 +41,9 @@ const float MAX_SPEED = 3.5f;
 const float STEP_UP = 0.5f;
 const float STEP_DOWN = 1.0f;
 
+const float GRAVITY = 0.98f;
+const float JUMP    = -2.0f;
+
 bool slow = true;
 }
 
@@ -100,6 +103,7 @@ void Player::draw()
     else
         sprite->draw(&position, 0.0f, LX_Graphics::LX_MIRROR_HORIZONTAL);
 
+    LX_Log::log("posd: %d %d", position.x, position.y);
 }
 
 
@@ -154,8 +158,6 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
                 speed.vx += STEP_DOWN;
         }
     }
-
-    LX_Log::log("speed x: %f", speed.vx);
 }
 
 
@@ -163,26 +165,33 @@ void Player::move()
 {
     fpos += speed;
     fpos.toPixelUnit(position);
+    LX_Log::log("posm: %d %d", position.x, position.y);
 }
 
 bool Player::collision(const Area& area)
 {
-    for(auto& arr : area.gtiles)
+    for(size_t i = 0; i < area.gtiles.size(); ++i)
     {
-        for(const GTile& tile: arr)
+        for(const GTile& tile: area.gtiles[i])
         {
             if(collisionRect(position, tile.rect))
             {
                 if(tile.type == Area::TYPE_SOLID)
                 {
+                    LX_Log::log("posc1: %d %d", position.x, position.y);
                     if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
                     {
+                        fpos.y = tile.rect.y - position.h;
                         position.y = tile.rect.y - position.h;
+                        speed.vy = 0.0f;
                     }
                     else if (speed.vy < 0.0f && tile.rect.y + tile.rect.h > position.y)
                     {
+                        fpos.y = tile.rect.y + position.h;
                         position.y = tile.rect.y + position.h;
+                        speed.vy = 0.0f;
                     }
+                    LX_Log::log("posc2: %d %d", position.x, position.y);
                 }
                 else if(tile.type == Area::TYPE_DEATH)
                 {
@@ -191,8 +200,23 @@ bool Player::collision(const Area& area)
                     speed *= 0.0f;
                 }
                 else if(tile.type == Area::TYPE_EXIT)
-                {
                     return true;
+                else
+                {
+                    if(i < area.gtiles.size() -1)
+                    {
+                        auto it = std::find_if(area.gtiles[i+1].begin(),
+                                               area.gtiles[i+1].end(),
+                                               [this](const GTile & gt)
+                        {
+                            return position.x == gt.rect.x;
+                        });
+
+                        if(it != area.gtiles[i+1].end() && (*it).type ==  Area::TYPE_NONE)
+                        {
+                            speed.vy = GRAVITY;
+                        }
+                    }
                 }
             }
         }
