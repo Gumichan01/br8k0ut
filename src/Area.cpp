@@ -38,8 +38,15 @@
 namespace
 {
 const std::string MAP_PATH("./data/map/");
+
+const std::string TYPE_NONE("none");
+const std::string TYPE_SOLID("solid");
+const std::string TYPE_START("start");
+const std::string TYPE_DEATH("death");
+
 const int SPRITE_W = 8;
 const int SPRITE_H = 8;
+
 }
 
 using namespace LX_Graphics;
@@ -87,6 +94,7 @@ Area::Area(unsigned int lvl): level_id(lvl)
     {
         LX_Log::log("Tile: %d - %s", tile.id, (MAP_PATH + tile.img.name).c_str());
         sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_RGB888));
+        vtypes.push_back(Type{tile.id, tile.type});
     }
 
     LX_Log::log("END TSX\n");
@@ -131,6 +139,18 @@ void Area::parseMap(const std::string& map_string)
         {
             gtiles[acount][j].id_tile = std::atoi(it->str().c_str());
             gtiles[acount][j].id_sprite = gtiles[acount][j].id_tile - 1;
+
+            int tmp_id = gtiles[acount][j].id_tile;
+            auto it = std::find_if(vtypes.begin(), vtypes.end(), [&tmp_id](const Type& ty)
+            {
+                return ty.id == tmp_id;
+            });
+
+            if(it != vtypes.end())
+                gtiles[acount][j].type = it->label;
+            else
+                gtiles[acount][j].type = TYPE_NONE;
+
             it++;
             j++;
         }

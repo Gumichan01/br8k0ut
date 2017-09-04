@@ -39,13 +39,21 @@ struct GTile
 {
     unsigned int id_tile;
     unsigned int id_sprite;
+    std::string type;
     LX_AABB rect;
+};
+
+struct Type
+{
+    unsigned id;
+    std::string label;
 };
 
 
 class Area
 {
     unsigned int level_id;
+    std::vector<Type> vtypes;
     std::vector<LX_Graphics::LX_Sprite*> sprites;
     std::array<std::array<GTile, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gtiles;
 
