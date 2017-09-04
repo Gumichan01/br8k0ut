@@ -167,13 +167,9 @@ void Area::draw()
     {
         for(GTile& tile: arr)
         {
-            if(tile.type == TYPE_START)
-                LX_Log::log("%d %d %d %d", tile.rect.x, tile.rect.y, tile.rect.w, tile.rect.h);
-
             sprites[tile.id_sprite]->draw(&tile.rect);
         }
     }
-
 }
 
 
