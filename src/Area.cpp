@@ -51,6 +51,7 @@ const std::string Area::TYPE_NONE = "none";
 const std::string Area::TYPE_SOLID = "solid";
 const std::string Area::TYPE_START ="start";
 const std::string Area::TYPE_DEATH = "death";
+const std::string Area::TYPE_EXIT = "exit";
 
 
 Area::Area(unsigned int lvl): level_id(lvl)
@@ -174,7 +175,7 @@ void Area::draw()
 }
 
 
-const LX_AABB Area::getStart()
+const LX_AABB Area::getStart() const
 {
     bool found = false;
     size_t i = 0;

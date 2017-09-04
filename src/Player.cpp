@@ -165,7 +165,7 @@ void Player::move()
     fpos.toPixelUnit(position);
 }
 
-void Player::collision(const Area& area)
+bool Player::collision(const Area& area)
 {
     for(auto& arr : area.gtiles)
     {
@@ -184,9 +184,21 @@ void Player::collision(const Area& area)
                         position.y = tile.rect.y + position.h;
                     }
                 }
+                else if(tile.type == Area::TYPE_DEATH)
+                {
+                    position.x = area.getStart().x;
+                    position.y = area.getStart().y;
+                    speed *= 0.0f;
+                }
+                else if(tile.type == Area::TYPE_EXIT)
+                {
+                    return true;
+                }
             }
         }
     }
+
+    return false;
 }
 
 

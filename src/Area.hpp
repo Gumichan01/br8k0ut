@@ -68,12 +68,12 @@ public:
     static const std::string TYPE_SOLID;
     static const std::string TYPE_START;
     static const std::string TYPE_DEATH;
-
+    static const std::string TYPE_EXIT;
 
     Area(unsigned int lvl);
     void draw();
 
-    const LX_AABB getStart();
+    const LX_AABB getStart() const;
 
     ~Area();
 };

@@ -31,7 +31,8 @@
 
 using namespace LX_Event;
 
-Game::Game(LX_Win::LX_Window& w) : lvl_count(0), exit_status(false), player(nullptr), win(w)
+Game::Game(LX_Win::LX_Window& w) : done(false), lvl_count(0),
+    exit_status(false), player(nullptr), win(w)
 {
     for(unsigned int i = 1; i <= NB_LEVELS; ++i)
     {
@@ -39,7 +40,6 @@ Game::Game(LX_Win::LX_Window& w) : lvl_count(0), exit_status(false), player(null
     }
 
     /// @todo allocate player
-    player = new Player(areas[0]->getStart());
 }
 
 
@@ -47,7 +47,10 @@ void Game::play()
 {
     while(lvl_count < NB_LEVELS && !exit_status)
     {
+        player = new Player(areas[0]->getStart());
         loop();
+        delete player;
+        player = nullptr;
         lvl_count++;
     }
 }
@@ -55,7 +58,7 @@ void Game::play()
 
 void Game::loop()
 {
-    bool done = false;
+    done = false;
     while(!done)
     {
         if((done = input()) == true)
@@ -63,9 +66,9 @@ void Game::loop()
 
         physics();
         status();
-        //clean();
         display();
     }
+    clean();
 }
 
 
@@ -106,7 +109,8 @@ bool Game::input()
 void Game::physics()
 {
     /// @todo handle collision detection, gravity
-    player->collision(*areas[lvl_count]);
+    if(player->collision(*areas[lvl_count]))
+        done = true;
 }
 
 

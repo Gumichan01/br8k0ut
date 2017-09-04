@@ -74,7 +74,7 @@ public:
     void input(const LX_Event::LX_EventHandler& ev);
     void move();
 
-    void collision(const Area& area);
+    bool collision(const Area& area);
 
     const LX_AABB& getPos();
 
