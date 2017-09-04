@@ -37,11 +37,11 @@ namespace
 const FloatPosition DFPOS = {0.0f, 0.0f};
 const std::string PLAYER_PATH("./data/image/player.png");
 
-const float MAX_SPEED = 3.0f;
+const float MAX_SPEED = 4.0f;
 const float STEP_UP = 0.5f;
 const float STEP_DOWN = 1.0f;
 
-const float GRAVITY = 2.098f;
+const float GRAVITY = 1.98f;
 const float JUMP    = -2.0f;
 
 bool slow = true;
@@ -179,6 +179,7 @@ bool Player::collision(const Area& area)
                 if(tile.type == Area::TYPE_SOLID)
                 {
                     //LX_Log::log("posc1: %d %d", position.x, position.y);
+                    /// vertical collision
                     if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
                     {
                         fpos.y = tile.rect.y - position.h;
@@ -187,10 +188,25 @@ bool Player::collision(const Area& area)
                     }
                     else if (speed.vy < 0.0f && tile.rect.y + tile.rect.h > position.y)
                     {
-                        fpos.y = tile.rect.y + position.h;
+                        fpos.y = tile.rect.x + position.h;
                         position.y = tile.rect.y + position.h;
                         speed.vy = 0.0f;
                     }
+
+                    /// horizontal collision
+                    if(speed.vx > 0.0f && tile.rect.x < (position.x + position.w))
+                    {
+                        fpos.x = tile.rect.x - position.w;
+                        position.x = tile.rect.x - position.w;
+                        speed.vx = 0.0f;
+                    }
+                    else if (speed.vx < 0.0f && tile.rect.x + tile.rect.w > position.x)
+                    {
+                        fpos.x = tile.rect.x + position.w;
+                        position.x = tile.rect.x + position.w;
+                        speed.vx = 0.0f;
+                    }
+
                     //LX_Log::log("posc2: %d %d", position.x, position.y);
                 }
                 else if(tile.type == Area::TYPE_DEATH)
@@ -220,7 +236,7 @@ bool Player::collision(const Area& area)
 
                 if(it != area.gtiles[i+1].end())
                 {
-                    LX_Log::log("posc4: %d %d", position.x, position.y);
+                    //LX_Log::log("posc4: %d %d", position.x, position.y);
                     speed.vy = GRAVITY;
                 }
             }

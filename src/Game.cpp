@@ -62,8 +62,8 @@ void Game::loop()
         if((done = input()) == true)
             continue;
 
-        physics();
         status();
+        physics();
         display();
     }
     clean();
