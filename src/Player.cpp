@@ -92,7 +92,11 @@ Player::Player(const LX_AABB& pos): sprite(nullptr), fpos(DFPOS), position(pos)
 
 void Player::draw()
 {
-    sprite->draw(&position);
+    if(speed.vx >= 0.0f)
+        sprite->draw(&position);
+    else
+        sprite->draw(&position, 0.0f, LX_Graphics::LX_MIRROR_HORIZONTAL);
+
 }
 
 
