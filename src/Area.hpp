@@ -49,9 +49,11 @@ struct Type
     std::string label;
 };
 
+class Player;
 
 class Area
 {
+    friend class Player;
     unsigned int level_id;
     std::vector<Type*> vtypes;
     std::vector<LX_Graphics::LX_Sprite*> sprites;

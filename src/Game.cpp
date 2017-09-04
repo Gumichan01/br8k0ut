@@ -63,7 +63,7 @@ void Game::loop()
 
         physics();
         status();
-        clean();
+        //clean();
         display();
     }
 }
