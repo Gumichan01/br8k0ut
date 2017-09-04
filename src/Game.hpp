@@ -34,6 +34,7 @@ class LX_Window;
 }
 
 class Area;
+class Player;
 
 class Game
 {
@@ -41,6 +42,7 @@ class Game
 
     unsigned int lvl_count;
     bool exit_status;
+    Player * player;
     std::vector<Area*> areas;
     //std::vector<Shooter*> shooter;
 

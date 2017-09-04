@@ -23,18 +23,23 @@
 
 #include "Game.hpp"
 #include "Area.hpp"
+#include "Player.hpp"
 
 #include <LunatiX/LX_Window.hpp>
 #include <LunatiX/LX_Timer.hpp>
 
+
 using namespace LX_Event;
 
-Game::Game(LX_Win::LX_Window& w) : lvl_count(0), exit_status(false), win(w)
+Game::Game(LX_Win::LX_Window& w) : lvl_count(0), exit_status(false), player(nullptr), win(w)
 {
     for(unsigned int i = 1; i <= NB_LEVELS; ++i)
     {
         areas.push_back(new Area(i));
     }
+
+    /// @todo allocate player
+    player = new Player(areas[0]->getStart());
 }
 
 
@@ -104,6 +109,7 @@ void Game::physics()
 void Game::status()
 {
     /// @todo update status (player, bullets)
+    player->move();
 }
 
 void Game::clean()
@@ -115,6 +121,7 @@ void Game::display()
 {
     win.clearWindow();
     areas.at(lvl_count)->draw();
+    player->draw();
     win.update();
     LX_Timer::delay(33);
 }
@@ -128,4 +135,5 @@ Game::~Game()
     }
 
     areas.clear();
+    delete player;
 }
