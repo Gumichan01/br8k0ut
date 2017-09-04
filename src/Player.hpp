@@ -27,6 +27,7 @@
 
 #include <LunatiX/LX_AABB.hpp>
 #include <LunatiX/LX_Vector2D.hpp>
+#include <LunatiX/LX_Event.hpp>
 
 
 namespace LX_Graphics
@@ -69,6 +70,7 @@ public:
     Player(const LX_AABB& pos);
 
     void draw();
+    void input(const LX_Event::LX_EventHandler& ev);
     void move();
 
     ~Player();

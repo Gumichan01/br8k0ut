@@ -27,6 +27,7 @@
 #include <LunatiX/LX_Hitbox.hpp>
 #include <LunatiX/LX_WindowManager.hpp>
 #include <LunatiX/LX_Graphics.hpp>
+#include <LunatiX/LX_Log.hpp>
 
 
 namespace
@@ -87,9 +88,33 @@ void Player::draw()
     sprite->draw(&position);
 }
 
+
+void Player::input(const LX_Event::LX_EventHandler& ev)
+{
+    if(ev.getEventType() ==  LX_Event::LX_EventType::LX_KEYDOWN)
+    {
+        if(ev.getKeyCode() == SDLK_LEFT)
+            speed.vx = -2.0f;
+
+        else if(ev.getKeyCode() == SDLK_RIGHT)
+            speed.vx = 2.0f;
+    }
+
+    if(ev.getEventType() == LX_Event::LX_EventType::LX_KEYUP)
+    {
+        if(ev.getKeyCode() == SDLK_LEFT || ev.getKeyCode() == SDLK_RIGHT)
+            speed.vx = 0.0f;
+    }
+
+    if(ev.getKeyCode() == SDLK_SPACE)
+        LX_Log::log("JUMP");
+}
+
+
 void Player::move()
 {
-
+    fpos += speed;
+    fpos.toPixelUnit(position);
 }
 
 Player::~Player()
