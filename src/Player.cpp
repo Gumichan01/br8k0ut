@@ -162,6 +162,13 @@ void Player::move()
     fpos.toPixelUnit(position);
 }
 
+
+const LX_AABB& Player::getPos()
+{
+    return position;
+}
+
+
 Player::~Player()
 {
     delete sprite;

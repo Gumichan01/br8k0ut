@@ -73,6 +73,8 @@ public:
     void input(const LX_Event::LX_EventHandler& ev);
     void move();
 
+    const LX_AABB& getPos();
+
     ~Player();
 };
 
