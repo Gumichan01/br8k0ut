@@ -105,6 +105,12 @@ bool Parser::load( const char* filename )
                 tile.terrain.push_back( std::atoi( tmpValue.c_str() ) );
             }
 
+
+            if(tile_node->first_attribute( "type" ) != nullptr)
+                tile.type = tile_node->first_attribute( "type" )->value();
+            else
+                tile.type = "none";
+
             //parse tile properties
             if( tile_node->first_node( "properties" ) != 0 )
             {

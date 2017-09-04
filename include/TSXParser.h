@@ -60,6 +60,7 @@ public:
     struct Tile
     {
         unsigned int id;
+        std::string type;
         Image img;
         std::vector<unsigned int> terrain;
         std::map<std::string, std::string> property;
