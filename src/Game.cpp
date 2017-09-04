@@ -38,8 +38,6 @@ Game::Game(LX_Win::LX_Window& w) : done(false), lvl_count(0),
     {
         areas.push_back(new Area(i));
     }
-
-    /// @todo allocate player
 }
 
 
@@ -47,7 +45,7 @@ void Game::play()
 {
     while(lvl_count < NB_LEVELS && !exit_status)
     {
-        player = new Player(areas[0]->getStart());
+        player = new Player(areas[lvl_count]->getStart());
         loop();
         delete player;
         player = nullptr;
