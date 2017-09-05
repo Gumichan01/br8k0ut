@@ -42,11 +42,10 @@ const float STEP_UP   = 0.5f;
 const float STEP_DOWN = 1.0f;
 
 const float GRAVITY   = 2.98f;
-const float JUMP      = -4.0f;
+const float JUMP      = -8.0f;
 const float JUMP_STEP = 1.0f;
 
 bool slow = true;
-bool jump = false;
 }
 
 using namespace LX_Win;
@@ -123,7 +122,7 @@ void Player::draw()
 }
 
 
-void Player::input(const LX_Event::LX_EventHandler& ev)
+void Player::inputState()
 {
     const uint8_t *KEYS = LX_Event::LX_EventHandler::getKeyboardState().state;
 
@@ -147,21 +146,6 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
             speed.vx = MAX_SPEED;
     }
 
-    if(ev.getEventType() == LX_Event::LX_EventType::LX_KEYUP)
-    {
-        if(ev.getKeyCode() == SDLK_LEFT || ev.getKeyCode() == SDLK_RIGHT)
-            slow = true;
-
-        else if(ev.getKeyCode() == SDLK_SPACE)
-        {
-            if(!jump)
-            {
-                LX_Log::log("JUMP");
-                speed.vy = JUMP;
-            }
-        }
-    }
-
     if(slow)
     {
         if(speed.vx > 0.0f)
@@ -179,15 +163,20 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
                 speed.vx += STEP_DOWN;
         }
     }
+}
 
-    if(jump)
+
+void Player::input(const LX_Event::LX_EventHandler& ev)
+{
+    if(ev.getEventType() == LX_Event::LX_EventType::LX_KEYUP)
     {
-        if(speed.vy < 0.0f)
+        if(ev.getKeyCode() == SDLK_LEFT || ev.getKeyCode() == SDLK_RIGHT)
+            slow = true;
+
+        else if(ev.getKeyCode() == SDLK_SPACE)
         {
-            speed.vy += JUMP_STEP;
+            /// @todo dash
         }
-        else
-            jump = false;
     }
 }
 
@@ -293,7 +282,6 @@ bool Player::status(const Area& area)
 
             if(left)
             {
-                LX_Log::log("left 2");
                 if(area.gtiles[imax][jmax].type == Area::TYPE_SOLID)
                 {
                     fpos.y = area.gtiles[imax][jmax].rect.y - position.h;
@@ -306,9 +294,9 @@ bool Player::status(const Area& area)
         {
             if(!xmod)
             {
-                fpos.y = tile.rect.y + position.h;
-                position.y = tile.rect.y + position.h;
-                speed.vy = 0.0f;
+                fpos.y = tile.rect.y + tile.rect.h + 1;
+                position.y = tile.rect.y + tile.rect.h + 1;
+                speed.vy = -speed.vy;
             }
         }
 

@@ -72,6 +72,7 @@ public:
 
     void draw();
     void input(const LX_Event::LX_EventHandler& ev);
+    void inputState();
     void move();
 
     bool status(const Area& area);

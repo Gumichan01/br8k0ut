@@ -90,6 +90,8 @@ bool Game::input()
                 win.toggleFullscreen(full ? LX_Win::LX_WINDOW_NO_FULLSCREEN : LX_Win::LX_WINDOW_FULLSCREEN);
                 full = !full;
             }
+            else
+                player->input(ev);
             break;
 
         default:
@@ -97,7 +99,7 @@ bool Game::input()
         }
     }
 
-    player->input(ev);
+    player->inputState();
 
     return done;
 }
