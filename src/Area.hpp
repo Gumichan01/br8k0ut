@@ -52,6 +52,9 @@ struct Type
 
 class Player;
 
+const int TILE_W = 8;
+const int TILE_H = 8;
+
 class Area
 {
     friend class Player;

@@ -41,7 +41,7 @@ const float MAX_SPEED = 4.0f;
 const float STEP_UP = 0.5f;
 const float STEP_DOWN = 1.0f;
 
-const float GRAVITY = 1.98f;
+const float GRAVITY = 2.98f;
 const float JUMP    = -2.0f;
 
 bool slow = true;
@@ -123,36 +123,36 @@ void Player::draw()
 
 void Player::input(const LX_Event::LX_EventHandler& ev)
 {
-    if(ev.getEventType() == LX_Event::LX_EventType::LX_KEYDOWN)
+    const uint8_t *KEYS = LX_Event::LX_EventHandler::getKeyboardState().state;
+
+    if(KEYS[SDL_SCANCODE_LEFT])
     {
-        if(ev.getKeyCode() == SDLK_LEFT)
-        {
-            slow = false;
+        slow = false;
 
-            if(speed.vx > -MAX_SPEED)
-                speed.vx -= STEP_UP;
-            else
-                speed.vx = -MAX_SPEED;
-        }
-        else if(ev.getKeyCode() == SDLK_RIGHT)
-        {
-            slow = false;
+        if(speed.vx > -MAX_SPEED)
+            speed.vx -= STEP_UP;
+        else
+            speed.vx = -MAX_SPEED;
+    }
 
-            if(speed.vx < MAX_SPEED)
-                speed.vx += STEP_UP;
-            else
-                speed.vx = MAX_SPEED;
-        }
+    if(KEYS[SDL_SCANCODE_RIGHT])
+    {
+        slow = false;
+
+        if(speed.vx < MAX_SPEED)
+            speed.vx += STEP_UP;
+        else
+            speed.vx = MAX_SPEED;
     }
 
     if(ev.getEventType() == LX_Event::LX_EventType::LX_KEYUP)
     {
         if(ev.getKeyCode() == SDLK_LEFT || ev.getKeyCode() == SDLK_RIGHT)
             slow = true;
-    }
 
-    if(ev.getKeyCode() == SDLK_SPACE)
-        LX_Log::log("JUMP");
+        else if(ev.getKeyCode() == SDLK_SPACE)
+            LX_Log::log("JUMP");
+    }
 
     if(slow)
     {
@@ -181,9 +181,28 @@ void Player::move()
     //LX_Log::log("posm: %d %d", position.x, position.y);
 }
 
-bool Player::collision(const Area& area)
+bool Player::status(const Area& area)
 {
-    for(size_t i = 0; i < area.gtiles.size(); ++i)
+    /*int jmin = position.x / TILE_W;
+    int imin = position.y / TILE_H;
+    int jmax = position.x + position.w / TILE_W;
+    int imax = position.y + position.h / TILE_H;
+
+    for(int i = imin; i <= imax; ++i)
+    {
+        for(int j = jmin; j <= jmax; ++j)
+        {
+            const Gtile& tile = area.gtiles[i][j];
+
+            if(collisionRect(position, tile.rect))
+            {
+
+            }
+        }
+    }*/
+
+    return false;
+    /*for(size_t i = 0; i < area.gtiles.size(); ++i)
     {
         for(size_t j = 0; j < area.gtiles[i].size(); ++j)
         {
@@ -278,7 +297,7 @@ bool Player::collision(const Area& area)
                 }
             }
         }
-    }
+    }*/
 
     return false;
 }
