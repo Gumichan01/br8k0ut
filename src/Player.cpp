@@ -98,10 +98,26 @@ Player::Player(const LX_AABB& pos): sprite(nullptr), fpos(DFPOS), position(pos)
 
 void Player::draw()
 {
-    if(speed.vx >= 0.0f)
+    static short last = 0;
+
+    if(speed.vx > 0.0f)
+    {
         sprite->draw(&position);
-    else
+        last = 0;
+    }
+    else if (speed.vx < 0.0f)
+    {
         sprite->draw(&position, 0.0f, LX_Graphics::LX_MIRROR_HORIZONTAL);
+        last = LX_Graphics::LX_MIRROR_HORIZONTAL;
+    }
+    else
+    {
+        if(last == 0)
+            sprite->draw(&position);
+        else
+            sprite->draw(&position, 0.0f, LX_Graphics::LX_MIRROR_HORIZONTAL);
+
+    }
 
     //LX_Log::log("posd: %d %d", position.x, position.y);
 }
@@ -174,39 +190,54 @@ bool Player::collision(const Area& area)
     {
         for(const GTile& tile: area.gtiles[i])
         {
+            bool xmod = false;
+
             if(collisionRect(position, tile.rect))
             {
                 if(tile.type == Area::TYPE_SOLID)
                 {
-                    //LX_Log::log("posc1: %d %d", position.x, position.y);
+                    /// horizontal collision
+                    if(speed.vx > 0.0f && tile.rect.x < (position.x + position.w))
+                    {
+                        speed.vx = 0.0f;
+
+                        if(tile.rect.y <= position.y)
+                        {
+                            fpos.x = tile.rect.x - position.w;
+                            position.x = tile.rect.x - position.w;
+                            xmod = true;
+                        }
+                    }
+                    else if (speed.vx < 0.0f && tile.rect.x + tile.rect.w > position.x)
+                    {
+                        speed.vx = 0.0f;
+
+                        if(tile.rect.y <= position.y)
+                        {
+                            fpos.x = tile.rect.x + position.w;
+                            position.x = tile.rect.x + position.w;
+                            xmod = true;
+                        }
+                    }
+
                     /// vertical collision
                     if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
                     {
-                        fpos.y = tile.rect.y - position.h;
-                        position.y = tile.rect.y - position.h;
-                        speed.vy = 0.0f;
+                        if(!xmod)
+                        {
+                            fpos.y = tile.rect.y - position.h;
+                            position.y = tile.rect.y - position.h;
+                            speed.vy = 0.0f;
+                        }
                     }
                     else if (speed.vy < 0.0f && tile.rect.y + tile.rect.h > position.y)
                     {
-                        fpos.y = tile.rect.x + position.h;
+                        fpos.y = tile.rect.y + position.h;
                         position.y = tile.rect.y + position.h;
                         speed.vy = 0.0f;
                     }
 
-                    /// horizontal collision
-                    if(speed.vx > 0.0f && tile.rect.x < (position.x + position.w))
-                    {
-                        fpos.x = tile.rect.x - position.w;
-                        position.x = tile.rect.x - position.w;
-                        speed.vx = 0.0f;
-                    }
-                    else if (speed.vx < 0.0f && tile.rect.x + tile.rect.w > position.x)
-                    {
-                        fpos.x = tile.rect.x + position.w;
-                        position.x = tile.rect.x + position.w;
-                        speed.vx = 0.0f;
-                    }
-
+                    return false;
                     //LX_Log::log("posc2: %d %d", position.x, position.y);
                 }
                 else if(tile.type == Area::TYPE_DEATH)
@@ -214,9 +245,11 @@ bool Player::collision(const Area& area)
                     fpos = area.getStart();
                     position = area.getStart();
                     speed *= 0.0f;
+                    return false;
                 }
                 else if(tile.type == Area::TYPE_EXIT)
                     return true;
+
             }
 
             if(i < area.gtiles.size() -1)
