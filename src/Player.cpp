@@ -118,14 +118,12 @@ void Player::draw()
             sprite->draw(&position, 0.0f, LX_Graphics::LX_MIRROR_HORIZONTAL);
 
     }
-
-    //LX_Log::log("posd: %d %d", position.x, position.y);
 }
 
 
 void Player::input(const LX_Event::LX_EventHandler& ev)
 {
-    if(ev.getEventType() ==  LX_Event::LX_EventType::LX_KEYDOWN)
+    if(ev.getEventType() == LX_Event::LX_EventType::LX_KEYDOWN)
     {
         if(ev.getKeyCode() == SDLK_LEFT)
         {
@@ -136,7 +134,6 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
             else
                 speed.vx = -MAX_SPEED;
         }
-
         else if(ev.getKeyCode() == SDLK_RIGHT)
         {
             slow = false;
@@ -188,8 +185,9 @@ bool Player::collision(const Area& area)
 {
     for(size_t i = 0; i < area.gtiles.size(); ++i)
     {
-        for(const GTile& tile: area.gtiles[i])
+        for(size_t j = 0; j < area.gtiles[i].size(); ++j)
         {
+            const GTile& tile = area.gtiles[i][j];
             bool xmod = false;
 
             if(collisionRect(position, tile.rect))
@@ -201,24 +199,27 @@ bool Player::collision(const Area& area)
                     {
                         speed.vx = 0.0f;
 
-                        if(tile.rect.y <= position.y)
+                        if(tile.rect.y <= position.y && speed.vy >= 0.0f)
                         {
                             fpos.x = tile.rect.x - position.w;
                             position.x = tile.rect.x - position.w;
                             xmod = true;
                         }
                     }
-                    else if (speed.vx < 0.0f && tile.rect.x + tile.rect.w > position.x)
+                    else if(speed.vx <= 0.0f && tile.rect.x + tile.rect.w > position.x)
                     {
                         speed.vx = 0.0f;
 
-                        if(tile.rect.y <= position.y)
+                        if(tile.rect.y <= position.y && speed.vy >= 0.0f)
                         {
                             fpos.x = tile.rect.x + position.w;
                             position.x = tile.rect.x + position.w;
                             xmod = true;
                         }
                     }
+
+
+                    LX_Log::log("sp: %f;pos: %d g %d", speed.vy, position.y, tile.rect.y + tile.rect.h);
 
                     /// vertical collision
                     if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
@@ -230,11 +231,14 @@ bool Player::collision(const Area& area)
                             speed.vy = 0.0f;
                         }
                     }
-                    else if (speed.vy < 0.0f && tile.rect.y + tile.rect.h > position.y)
+                    else if(speed.vy <= 0.0f && tile.rect.y + tile.rect.h > position.y)
                     {
-                        fpos.y = tile.rect.y + position.h;
-                        position.y = tile.rect.y + position.h;
-                        speed.vy = 0.0f;
+                        if(!xmod)
+                        {
+                            fpos.y = tile.rect.y + position.h;
+                            position.y = tile.rect.y + position.h;
+                            speed.vy = 0.0f;
+                        }
                     }
 
                     return false;
