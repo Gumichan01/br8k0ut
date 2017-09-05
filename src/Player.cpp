@@ -183,23 +183,119 @@ void Player::move()
 
 bool Player::status(const Area& area)
 {
-    /*int jmin = position.x / TILE_W;
-    int imin = position.y / TILE_H;
-    int jmax = position.x + position.w / TILE_W;
-    int imax = position.y + position.h / TILE_H;
+    int x = -1, y = -1;
+    bool found = false;
+    const int jmin = position.x / TILE_W;
+    const int imin = position.y / TILE_H;
+    const int jmax = (position.x + position.w - 1) / TILE_W;
+    const int imax = (position.y + position.h - 1) / TILE_H;
 
     for(int i = imin; i <= imax; ++i)
     {
         for(int j = jmin; j <= jmax; ++j)
         {
-            const Gtile& tile = area.gtiles[i][j];
+            const GTile& tile = area.gtiles[i][j];
 
-            if(collisionRect(position, tile.rect))
+            if(collisionRect(position, tile.rect) && tile.type != Area::TYPE_NONE)
             {
-
+                x = i;
+                y = j;
+                found = true;
+                break;
             }
         }
-    }*/
+
+        if(found)
+            break;
+    }
+
+    if(x == -1 && y == -1)
+    {
+        if((area.gtiles[imax + 1][jmin].type == Area::TYPE_NONE
+                && area.gtiles[imax + 1][jmax].type == Area::TYPE_NONE)
+                || (area.gtiles[imax + 1][jmin].type == Area::TYPE_DEATH
+                    && area.gtiles[imax +1][jmax].type == Area::TYPE_DEATH))
+            speed.vy = GRAVITY;
+
+
+        return false;
+    }
+
+    if(area.gtiles[x][y].type == Area::TYPE_DEATH)
+    {
+        fpos = area.getStart();
+        position = area.getStart();
+        speed *= 0.0f;
+        return false;
+    }
+    else if(area.gtiles[x][y].type == Area::TYPE_EXIT)
+        return true;
+
+    else if(area.gtiles[x][y].type == Area::TYPE_SOLID)
+    {
+        bool xmod = false;
+        bool left = false;
+        const GTile& tile = area.gtiles[x][y];
+
+        /// horizontal collision
+        if(speed.vx > 0.0f && tile.rect.x < (position.x + position.w))
+        {
+            speed.vx = 0.0f;
+
+            if(tile.rect.y <= position.y && speed.vy >= 0.0f)
+            {
+                fpos.x = tile.rect.x - position.w;
+                position.x = tile.rect.x - position.w;
+                xmod = true;
+            }
+        }
+        else if(speed.vx < 0.0f && tile.rect.x + tile.rect.w > position.x)
+        {
+            speed.vx = 0.0f;
+            left = true;
+            LX_Log::log("left");
+
+            if(tile.rect.y <= position.y && speed.vy >= 0.0f)
+            {
+                fpos.x = tile.rect.x + position.w;
+                position.x = tile.rect.x + position.w;
+                xmod = true;
+            }
+        }
+
+        /// vertical collision
+        if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
+        {
+            if(!xmod)
+            {
+                fpos.y = tile.rect.y - position.h;
+                position.y = tile.rect.y - position.h;
+                speed.vy = 0.0f;
+            }
+
+            if(left)
+            {
+                LX_Log::log("left 2");
+                if(area.gtiles[imax][jmax].type == Area::TYPE_SOLID)
+                {
+                    fpos.y = area.gtiles[imax][jmax].rect.y - position.h;
+                    position.y = area.gtiles[imax][jmax].rect.y - position.h;
+                    speed.vy = 0.0f;
+                }
+            }
+        }
+        else if(speed.vy <= 0.0f && tile.rect.y + tile.rect.h > position.y)
+        {
+            if(!xmod)
+            {
+                fpos.y = tile.rect.y + position.h;
+                position.y = tile.rect.y + position.h;
+                speed.vy = 0.0f;
+            }
+        }
+
+        return false;
+    }
 
     return false;
     /*for(size_t i = 0; i < area.gtiles.size(); ++i)
@@ -237,7 +333,6 @@ bool Player::status(const Area& area)
                         }
                     }
 
-
                     LX_Log::log("sp: %f;pos: %d g %d", speed.vy, position.y, tile.rect.y + tile.rect.h);
 
                     /// vertical collision
@@ -272,7 +367,6 @@ bool Player::status(const Area& area)
                 }
                 else if(tile.type == Area::TYPE_EXIT)
                     return true;
-
             }
 
             if(i < area.gtiles.size() -1)
@@ -298,8 +392,6 @@ bool Player::status(const Area& area)
             }
         }
     }*/
-
-    return false;
 }
 
 
