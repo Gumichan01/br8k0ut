@@ -33,6 +33,11 @@ namespace LX_Win
 class LX_Window;
 }
 
+namespace LX_Mixer
+{
+class LX_Music;
+}
+
 class Area;
 class Player;
 
@@ -50,6 +55,7 @@ class Game
     //std::vector<Shooter*> shooter;
 
     LX_Win::LX_Window& win;
+    LX_Mixer::LX_Music *music;
     LX_Event::LX_EventHandler ev;
 
     /// @todo Player, entity, shooter

@@ -28,22 +28,34 @@
 
 #include <LunatiX/LX_Window.hpp>
 #include <LunatiX/LX_Timer.hpp>
+#include <LunatiX/LX_Mixer.hpp>
+#include <LunatiX/LX_Music.hpp>
 
+namespace
+{
+const std::string MUSIC_PATH("data/audio/gumichan01-eastern_wind.ogg");
+const unsigned short VOLUME = 75;
+}
 
 using namespace LX_Event;
 
+
 Game::Game(LX_Win::LX_Window& w) : done(false), lvl_count(0),
-    exit_status(false), player(nullptr), win(w)
+    exit_status(false), player(nullptr), win(w), music(nullptr)
 {
     for(unsigned int i = 1; i <= NB_LEVELS; ++i)
     {
         areas.push_back(new Area(i));
     }
+
+    LX_Mixer::setOverallVolume(VOLUME);
+    music = new LX_Mixer::LX_Music(MUSIC_PATH);
 }
 
 
 void Game::play()
 {
+    music->play(-1);
     while(lvl_count < NB_LEVELS && !exit_status)
     {
         player = new Player(areas[lvl_count]->getStart(), *areas[lvl_count]);
@@ -52,6 +64,8 @@ void Game::play()
         player = nullptr;
         lvl_count++;
     }
+    music->stop();
+    music->close();
 }
 
 
@@ -145,4 +159,5 @@ Game::~Game()
 
     areas.clear();
     delete player;
+    delete music;
 }
