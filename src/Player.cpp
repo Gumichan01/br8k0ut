@@ -44,6 +44,9 @@ const float STEP_DOWN = 1.0f;
 const float GRAVITY   = 2.98f;
 const float JUMP      = -8.0f;
 const float JUMP_STEP = 1.0f;
+const float DASH = 24.0f;
+const int DASH_STEP = 8;
+const int DASH_M = 3;
 
 bool slow = true;
 }
@@ -182,10 +185,73 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
 }
 
 
+void Player::adaptDash()
+{
+    bool found = false;
+    LX_AABB nposition;
+
+    for(int k = 1; k <= DASH / DASH_M; ++k)
+    {
+        nposition = position;
+
+        if(speed.vx > 0.0f)
+            nposition.x += DASH_STEP*k;
+        else
+            nposition.x -= DASH_STEP*k;
+
+        {
+            int jmin = position.x / TILE_W;
+            int imin = position.y / TILE_H;
+            int jmax = (position.x + position.w - 1) / TILE_W;
+            int imax = (position.y + position.h - 1) / TILE_H;
+
+            for(int i = imin; i <= imax; ++i)
+            {
+                for(int j = jmin; j <= jmax; ++j)
+                {
+                    const GTile& t = area.gtiles[i][j];
+
+                    if(collisionRect(nposition, t.rect) && t.type != Area::TYPE_NONE)
+                    {
+                        if(speed.vx > 0.0f)
+                            fpos.x += static_cast<float>(std::abs(nposition.x - t.rect.x) + DASH_STEP*k);
+                        else
+                            fpos.x -= static_cast<float>(std::abs(nposition.x - t.rect.x + t.rect.w) + DASH_STEP*k);
+
+                        fpos.toPixelUnit(position);
+                        found = true;
+                        break;
+                    }
+                }
+
+                if(found)
+                    break;
+            }
+        }
+    }
+
+    if(!found)
+    {
+        fpos.x += (speed.vx > 0.0f ? DASH: -DASH);
+        fpos.toPixelUnit(position);
+    }
+}
+
+
 void Player::move()
 {
-    fpos += speed;
-    fpos.toPixelUnit(position);
+    if(dash)
+    {
+        if(speed.vx != 0.0f)
+            adaptDash();
+
+        dash = false;
+    }
+    else
+    {
+        fpos += speed;
+        fpos.toPixelUnit(position);
+    }
 }
 
 
@@ -210,7 +276,6 @@ void Player::handleCollision(int imax, int jmax, const GTile& tile)
         {
             speed.vx = 0.0f;
             left = true;
-            LX_Log::log("left");
 
             if(tile.rect.y <= position.y && speed.vy >= 0.0f)
             {

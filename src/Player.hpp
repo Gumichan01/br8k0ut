@@ -70,6 +70,7 @@ class Player
     bool dash;
 
     void handleCollision(int imax, int jmax, const GTile& tile);
+    void adaptDash();
 
 public:
 
