@@ -267,64 +267,75 @@ void Player::move()
 
 void Player::handleCollision(int imax, int jmax, const GTile& tile)
 {
-        bool xmod = false;
-        bool left = false;
+    bool xmod = false;
+    bool left = false;
 
-        /// horizontal collision
-        if(speed.vx > 0.0f && tile.rect.x < (position.x + position.w))
+    /// horizontal collision
+    if(speed.vx > 0.0f && tile.rect.x < (position.x + position.w))
+    {
+        speed.vx = 0.0f;
+
+        if(tile.rect.y <= position.y && speed.vy >= 0.0f)
         {
-            speed.vx = 0.0f;
-
-            if(tile.rect.y <= position.y && speed.vy >= 0.0f)
-            {
-                fpos.x = tile.rect.x - position.w;
-                position.x = tile.rect.x - position.w;
-                xmod = true;
-            }
+            fpos.x = tile.rect.x - position.w;
+            position.x = tile.rect.x - position.w;
+            xmod = true;
         }
-        else if(speed.vx < 0.0f && tile.rect.x + tile.rect.w > position.x)
-        {
-            speed.vx = 0.0f;
-            left = true;
+    }
+    else if(speed.vx < 0.0f && tile.rect.x + tile.rect.w > position.x)
+    {
+        speed.vx = 0.0f;
+        left = true;
 
-            if(tile.rect.y <= position.y && speed.vy >= 0.0f)
-            {
-                fpos.x = tile.rect.x + position.w;
-                position.x = tile.rect.x + position.w;
-                xmod = true;
-            }
+        if(tile.rect.y <= position.y && speed.vy >= 0.0f)
+        {
+            fpos.x = tile.rect.x + position.w;
+            position.x = tile.rect.x + position.w;
+            xmod = true;
+        }
+    }
+
+    /// vertical collision
+    if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
+    {
+        if(!xmod)
+        {
+            fpos.y = tile.rect.y - position.h;
+            position.y = tile.rect.y - position.h;
+            speed.vy = 0.0f;
         }
 
-        /// vertical collision
-        if(speed.vy > 0.0f && tile.rect.y < (position.y + position.h))
+        if(left)
         {
-            if(!xmod)
+            if(area.gtiles[imax][jmax].type == Area::TYPE_SOLID)
             {
-                fpos.y = tile.rect.y - position.h;
-                position.y = tile.rect.y - position.h;
+                fpos.y = area.gtiles[imax][jmax].rect.y - position.h;
+                position.y = area.gtiles[imax][jmax].rect.y - position.h;
                 speed.vy = 0.0f;
             }
-
-            if(left)
-            {
-                if(area.gtiles[imax][jmax].type == Area::TYPE_SOLID)
-                {
-                    fpos.y = area.gtiles[imax][jmax].rect.y - position.h;
-                    position.y = area.gtiles[imax][jmax].rect.y - position.h;
-                    speed.vy = 0.0f;
-                }
-            }
         }
-        else if(speed.vy <= 0.0f && tile.rect.y + tile.rect.h > position.y)
+    }
+    else if(speed.vy <= 0.0f && tile.rect.y + tile.rect.h > position.y)
+    {
+        if(!xmod)
         {
-            if(!xmod)
-            {
-                fpos.y = tile.rect.y + tile.rect.h + 1;
-                position.y = tile.rect.y + tile.rect.h + 1;
-                speed.vy = -speed.vy;
-            }
+            fpos.y = tile.rect.y + tile.rect.h + 1;
+            position.y = tile.rect.y + tile.rect.h + 1;
+            speed.vy = -speed.vy;
         }
+    }
 }
+
+
+bool Player::outOfBound()
+{
+    LX_AABB game_bound = {TILE_W, TILE_H, Game::GAME_WIDTH - TILE_W,
+                          Game::GAME_HEIGHT - TILE_H
+                         };
+
+    return !collisionRect(position, game_bound);
+}
+
 
 bool Player::status()
 {
@@ -368,7 +379,7 @@ bool Player::status()
         return false;
     }
 
-    if(area.gtiles[x][y].type == Area::TYPE_DEATH)
+    if(area.gtiles[x][y].type == Area::TYPE_DEATH || outOfBound())
     {
         fpos = area.getStart();
         position = area.getStart();

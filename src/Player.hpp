@@ -71,6 +71,7 @@ class Player
 
     void handleCollision(int imax, int jmax, const GTile& tile);
     void adaptDash();
+    bool outOfBound();
 
 public:
 
