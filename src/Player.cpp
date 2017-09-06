@@ -191,8 +191,6 @@ void Player::adaptDash()
     bool oob = false;
     LX_AABB nposition;
 
-    LX_Log::log("dash");
-
     for(int k = 1; k <= DASH / DASH_M; ++k)
     {
         nposition = position;

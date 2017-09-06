@@ -40,7 +40,7 @@ class Player;
 
 class Game
 {
-    static const unsigned int NB_LEVELS = 5;
+    static const unsigned int NB_LEVELS = 6;
 
     bool done;
     unsigned int lvl_count;

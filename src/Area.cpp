@@ -88,6 +88,11 @@ Area::Area(unsigned int lvl): level_id(lvl)
         tmx.load((MAP_PATH + "05.tmx").c_str());
         break;
 
+    case 6:
+        LX_Log::log("TMX: open ./data/map/06.tmx");
+        tmx.load((MAP_PATH + "06.tmx").c_str());
+        break;
+
     default:
         break;
     }
