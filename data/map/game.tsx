@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="breakout" tilewidth="8" tileheight="8" tilecount="23" columns="0">
+<tileset name="breakout" tilewidth="8" tileheight="8" tilecount="24" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="8" height="8" source="../image/fond.png"/>
@@ -69,5 +69,8 @@
  </tile>
  <tile id="22">
   <image width="8" height="8" source="../image/digit_8.png"/>
+ </tile>
+ <tile id="23">
+  <image width="8" height="8" source="../image/trap_rev.png"/>
  </tile>
 </tileset>
