@@ -96,7 +96,7 @@ Player::Player(const LX_AABB& pos, const Area& a): sprite(nullptr), fpos(DFPOS),
     position(pos), area(a), dash(false)
 {
     LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
-    sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win, LX_PIXELFORMAT_RGB888);
+    sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win);
     fpos = position;
     speed *= 0.0f;
 }
@@ -359,7 +359,9 @@ bool Player::status()
         if((area.gtiles[imax + 1][jmin].type == Area::TYPE_NONE
                 && area.gtiles[imax + 1][jmax].type == Area::TYPE_NONE)
                 || (area.gtiles[imax + 1][jmin].type == Area::TYPE_DEATH
-                    && area.gtiles[imax +1][jmax].type == Area::TYPE_DEATH))
+                    && area.gtiles[imax +1][jmax].type == Area::TYPE_DEATH)
+                || (area.gtiles[imax + 1][jmin].type == Area::TYPE_EXIT
+                    && area.gtiles[imax +1][jmax].type == Area::TYPE_EXIT))
             speed.vy = GRAVITY;
 
 
