@@ -89,7 +89,8 @@ void FloatPosition::toPixelUnit(LX_AABB& aabb)
 
 /// Player
 
-Player::Player(const LX_AABB& pos): sprite(nullptr), fpos(DFPOS), position(pos)
+Player::Player(const LX_AABB& pos, const Area& a): sprite(nullptr), fpos(DFPOS),
+    position(pos), area(a), dash(false)
 {
     LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
     sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win, LX_PIXELFORMAT_RGB888);
@@ -173,9 +174,9 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
         if(ev.getKeyCode() == SDLK_LEFT || ev.getKeyCode() == SDLK_RIGHT)
             slow = true;
 
-        else if(ev.getKeyCode() == SDLK_SPACE)
+        else if(ev.getKeyCode() == SDLK_LSHIFT)
         {
-            /// @todo dash
+            dash = true;
         }
     }
 }
@@ -185,64 +186,13 @@ void Player::move()
 {
     fpos += speed;
     fpos.toPixelUnit(position);
-    //LX_Log::log("posm: %d %d", position.x, position.y);
 }
 
-bool Player::status(const Area& area)
+
+void Player::handleCollision(int imax, int jmax, const GTile& tile)
 {
-    int x = -1, y = -1;
-    bool found = false;
-    const int jmin = position.x / TILE_W;
-    const int imin = position.y / TILE_H;
-    const int jmax = (position.x + position.w - 1) / TILE_W;
-    const int imax = (position.y + position.h - 1) / TILE_H;
-
-    for(int i = imin; i <= imax; ++i)
-    {
-        for(int j = jmin; j <= jmax; ++j)
-        {
-            const GTile& tile = area.gtiles[i][j];
-
-            if(collisionRect(position, tile.rect) && tile.type != Area::TYPE_NONE)
-            {
-                x = i;
-                y = j;
-                found = true;
-                break;
-            }
-        }
-
-        if(found)
-            break;
-    }
-
-    if(x == -1 && y == -1)
-    {
-        if((area.gtiles[imax + 1][jmin].type == Area::TYPE_NONE
-                && area.gtiles[imax + 1][jmax].type == Area::TYPE_NONE)
-                || (area.gtiles[imax + 1][jmin].type == Area::TYPE_DEATH
-                    && area.gtiles[imax +1][jmax].type == Area::TYPE_DEATH))
-            speed.vy = GRAVITY;
-
-
-        return false;
-    }
-
-    if(area.gtiles[x][y].type == Area::TYPE_DEATH)
-    {
-        fpos = area.getStart();
-        position = area.getStart();
-        speed *= 0.0f;
-        return false;
-    }
-    else if(area.gtiles[x][y].type == Area::TYPE_EXIT)
-        return true;
-
-    else if(area.gtiles[x][y].type == Area::TYPE_SOLID)
-    {
         bool xmod = false;
         bool left = false;
-        const GTile& tile = area.gtiles[x][y];
 
         /// horizontal collision
         if(speed.vx > 0.0f && tile.rect.x < (position.x + position.w))
@@ -299,17 +249,65 @@ bool Player::status(const Area& area)
                 speed.vy = -speed.vy;
             }
         }
+}
+
+bool Player::status()
+{
+    int x = -1, y = -1;
+    bool found = false;
+    const int jmin = position.x / TILE_W;
+    const int imin = position.y / TILE_H;
+    const int jmax = (position.x + position.w - 1) / TILE_W;
+    const int imax = (position.y + position.h - 1) / TILE_H;
+
+    for(int i = imin; i <= imax; ++i)
+    {
+        for(int j = jmin; j <= jmax; ++j)
+        {
+            const GTile& tile = area.gtiles[i][j];
+
+            if(collisionRect(position, tile.rect) && tile.type != Area::TYPE_NONE)
+            {
+                x = i;
+                y = j;
+                found = true;
+                break;
+            }
+        }
+
+        if(found)
+            break;
+    }
+
+    if(x == -1 && y == -1)
+    {
+        if((area.gtiles[imax + 1][jmin].type == Area::TYPE_NONE
+                && area.gtiles[imax + 1][jmax].type == Area::TYPE_NONE)
+                || (area.gtiles[imax + 1][jmin].type == Area::TYPE_DEATH
+                    && area.gtiles[imax +1][jmax].type == Area::TYPE_DEATH))
+            speed.vy = GRAVITY;
+
 
         return false;
     }
 
+    if(area.gtiles[x][y].type == Area::TYPE_DEATH)
+    {
+        fpos = area.getStart();
+        position = area.getStart();
+        speed *= 0.0f;
+        return false;
+    }
+    else if(area.gtiles[x][y].type == Area::TYPE_EXIT)
+        return true;
+
+    else if(area.gtiles[x][y].type == Area::TYPE_SOLID)
+    {
+        handleCollision(imax, jmax, area.gtiles[x][y]);
+        return false;
+    }
+
     return false;
-}
-
-
-const LX_AABB& Player::getPos()
-{
-    return position;
 }
 
 

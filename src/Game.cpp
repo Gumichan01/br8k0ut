@@ -45,7 +45,7 @@ void Game::play()
 {
     while(lvl_count < NB_LEVELS && !exit_status)
     {
-        player = new Player(areas[lvl_count]->getStart());
+        player = new Player(areas[lvl_count]->getStart(), *areas[lvl_count]);
         loop();
         delete player;
         player = nullptr;
@@ -109,7 +109,7 @@ bool Game::input()
 void Game::physics()
 {
     /// @todo handle collision detection, gravity
-    done = player->status(*areas[lvl_count]);
+    done = player->status();
 }
 
 

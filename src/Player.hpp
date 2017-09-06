@@ -41,6 +41,7 @@ struct LX_Circle;
 }
 
 class Area;
+struct GTile;
 
 struct FloatPosition
 {
@@ -65,19 +66,21 @@ class Player
     FloatPosition fpos;
     LX_AABB position;
     LX_Physics::LX_Vector2D speed;
+    const Area& area;
+    bool dash;
+
+    void handleCollision(int imax, int jmax, const GTile& tile);
 
 public:
 
-    Player(const LX_AABB& pos);
+    Player(const LX_AABB& pos, const Area& a);
 
     void draw();
     void input(const LX_Event::LX_EventHandler& ev);
     void inputState();
+
     void move();
-
-    bool status(const Area& area);
-
-    const LX_AABB& getPos();
+    bool status();
 
     ~Player();
 };
