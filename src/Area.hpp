@@ -42,6 +42,7 @@ struct GTile
     unsigned int id_sprite;
     std::string type;
     LX_AABB rect;
+    LX_Graphics::LX_Sprite *sp;
 };
 
 struct Type

@@ -24,6 +24,7 @@
 #include "Game.hpp"
 #include "Area.hpp"
 #include "Player.hpp"
+#include "Framerate.hpp"
 
 #include <LunatiX/LX_Window.hpp>
 #include <LunatiX/LX_Timer.hpp>
@@ -65,6 +66,8 @@ void Game::loop()
         status();
         physics();
         display();
+        Framerate::regulate();
+        Framerate::cycle();
     }
     clean();
 }
@@ -127,10 +130,9 @@ void Game::clean()
 void Game::display()
 {
     win.clearWindow();
-    areas.at(lvl_count)->draw();
+    areas[lvl_count]->draw();
     player->draw();
     win.update();
-    LX_Timer::delay(16);
 }
 
 
