@@ -46,7 +46,7 @@ const float JUMP      = -8.0f;
 const float JUMP_STEP = 1.0f;
 const float DASH = 24.0f;
 const int DASH_STEP = 8;
-const int DASH_M = 3;
+const int DASH_M = 8;
 
 bool slow = true;
 }
@@ -188,7 +188,10 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
 void Player::adaptDash()
 {
     bool found = false;
+    bool oob = false;
     LX_AABB nposition;
+
+    LX_Log::log("dash");
 
     for(int k = 1; k <= DASH / DASH_M; ++k)
     {
@@ -199,11 +202,17 @@ void Player::adaptDash()
         else
             nposition.x -= DASH_STEP*k;
 
+        if(nposition.x <= TILE_W || nposition.x >= Game::GAME_WIDTH - TILE_W)
         {
-            int jmin = position.x / TILE_W;
-            int imin = position.y / TILE_H;
-            int jmax = (position.x + position.w - 1) / TILE_W;
-            int imax = (position.y + position.h - 1) / TILE_H;
+            oob = true;
+            break;
+        }
+
+        {
+            int jmin = nposition.x / TILE_W;
+            int imin = nposition.y / TILE_H;
+            int jmax = (nposition.x + nposition.w - 1) / TILE_W;
+            int imax = (nposition.y + nposition.h - 1) / TILE_H;
 
             for(int i = imin; i <= imax; ++i)
             {
@@ -230,10 +239,13 @@ void Player::adaptDash()
         }
     }
 
-    if(!found)
+    if(!oob)
     {
-        fpos.x += (speed.vx > 0.0f ? DASH: -DASH);
-        fpos.toPixelUnit(position);
+        if(!found)
+        {
+            fpos.x += (speed.vx > 0.0f ? DASH: -DASH);
+            fpos.toPixelUnit(position);
+        }
     }
 }
 
