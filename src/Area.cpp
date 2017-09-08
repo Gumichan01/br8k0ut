@@ -130,22 +130,16 @@ Area::Area(unsigned int lvl): level_id(lvl)
     /// Convert the map
     parseMap(tmx.tileLayer[it->first].data.contents);
 
-    int i = 0;
-
-    for(auto& arr : gtiles)
+    for(size_t i = 0; i < Game::GAME_HEIGHT; ++i)
     {
-        int j = 0;
 
-        for(size_t k = 0; k < arr.size(); ++k)
+        for(size_t j = 0; j < Game::GAME_WIDTH; ++j)
         {
-            arr[j].rect.x = j * SPRITE_W;
-            arr[j].rect.y = i * SPRITE_H;
-            arr[j].rect.w = SPRITE_W;
-            arr[j].rect.h = SPRITE_H;
-            j++;
+            gtiles[i * Game::GAME_WIDTH + j].rect.x = j * SPRITE_W;
+            gtiles[i * Game::GAME_WIDTH + j].rect.y = i * SPRITE_H;
+            gtiles[i * Game::GAME_WIDTH + j].rect.w = SPRITE_W;
+            gtiles[i * Game::GAME_WIDTH + j].rect.h = SPRITE_H;
         }
-
-        i++;
     }
 }
 
@@ -168,19 +162,19 @@ void Area::parseMap(const std::string& map_string)
 
         while(it != it_end)
         {
-            gtiles[acount][j].id_tile = std::atoi(it->str().c_str());
-            gtiles[acount][j].id_sprite = gtiles[acount][j].id_tile - 1;
+            gtiles[acount * Game::GAME_WIDTH + j].id_tile = std::atoi(it->str().c_str());
+            gtiles[acount * Game::GAME_WIDTH + j].id_sprite = gtiles[acount * Game::GAME_WIDTH + j].id_tile - 1;
 
-            int tmp_id = gtiles[acount][j].id_tile;
+            int tmp_id = gtiles[acount * Game::GAME_WIDTH + j].id_tile;
             auto itf = std::find_if(vtypes.begin(), vtypes.end(), [&tmp_id](const Type* ty)
             {
                 return ty->id == tmp_id;
             });
 
             if(itf != vtypes.end())
-                gtiles[acount][j].type = (*itf)->label;
+                gtiles[acount * Game::GAME_WIDTH + j].type = (*itf)->label;
             else
-                gtiles[acount][j].type = TYPE_NONE;
+                gtiles[acount * Game::GAME_WIDTH + j].type = TYPE_NONE;
 
             it++;
             j++;
@@ -192,36 +186,27 @@ void Area::parseMap(const std::string& map_string)
 
 void Area::draw()
 {
-    for(auto& arr : gtiles)
-    {
-        for(GTile& tile: arr)
+        for(GTile& tile: gtiles)
         {
             sprites[tile.id_sprite]->draw(&tile.rect);
         }
-    }
 }
 
 
 const LX_AABB Area::getStart() const
 {
     bool found = false;
-    size_t i = 0;
     LX_AABB aabb;
 
-    while(i < gtiles.size() && !found)
+    auto it = std::find_if(gtiles.begin(), gtiles.end(), [](const GTile& gt)
     {
-        auto it = std::find_if(gtiles[i].begin(), gtiles[i].end(), [](const GTile& gt)
-        {
-            return gt.type == TYPE_START;
-        });
+        return gt.type == TYPE_START;
+    });
 
-        if(it != gtiles[i].end())
-        {
-            aabb = it->rect;
-            found = true;
-        }
-
-        i++;
+    if(it != gtiles.end())
+    {
+        aabb = it->rect;
+        found = true;
     }
 
     if(found)

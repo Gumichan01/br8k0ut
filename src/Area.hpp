@@ -62,7 +62,8 @@ class Area
     unsigned int level_id;
     std::vector<Type*> vtypes;
     std::vector<LX_Graphics::LX_Sprite*> sprites;
-    std::array<std::array<GTile, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gtiles;
+    //std::array<std::array<GTile, Game::GAME_WIDTH>, Game::GAME_HEIGHT> gtiles;
+    std::array<GTile, Game::GAME_HEIGHT * Game::GAME_WIDTH> gtiles;
 
     void parseMap(const std::string& map_string);
 

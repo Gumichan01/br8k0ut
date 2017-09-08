@@ -216,7 +216,7 @@ void Player::adaptDash()
             {
                 for(int j = jmin; j <= jmax; ++j)
                 {
-                    const GTile& t = area.gtiles[i][j];
+                    const GTile& t = area.gtiles[i * Game::GAME_WIDTH +j];
 
                     if(collisionRect(nposition, t.rect) && t.type != Area::TYPE_NONE)
                     {
@@ -307,10 +307,10 @@ void Player::handleCollision(int imax, int jmax, const GTile& tile)
 
         if(left)
         {
-            if(area.gtiles[imax][jmax].type == Area::TYPE_SOLID)
+            if(area.gtiles[imax * Game::GAME_WIDTH + jmax].type == Area::TYPE_SOLID)
             {
-                fpos.y = area.gtiles[imax][jmax].rect.y - position.h;
-                position.y = area.gtiles[imax][jmax].rect.y - position.h;
+                fpos.y = area.gtiles[imax * Game::GAME_WIDTH + jmax].rect.y - position.h;
+                position.y = area.gtiles[imax * Game::GAME_WIDTH + jmax].rect.y - position.h;
                 speed.vy = 0.0f;
             }
         }
@@ -350,7 +350,7 @@ bool Player::status()
     {
         for(int j = jmin; j <= jmax; ++j)
         {
-            const GTile& tile = area.gtiles[i][j];
+            const GTile& tile = area.gtiles[i * Game::GAME_WIDTH + j];
 
             if(collisionRect(position, tile.rect) && tile.type != Area::TYPE_NONE)
             {
@@ -367,31 +367,31 @@ bool Player::status()
 
     if(x == -1 && y == -1)
     {
-        if((area.gtiles[imax + 1][jmin].type == Area::TYPE_NONE
-                && area.gtiles[imax + 1][jmax].type == Area::TYPE_NONE)
-                || (area.gtiles[imax + 1][jmin].type == Area::TYPE_DEATH
-                    && area.gtiles[imax +1][jmax].type == Area::TYPE_DEATH)
-                || (area.gtiles[imax + 1][jmin].type == Area::TYPE_EXIT
-                    && area.gtiles[imax +1][jmax].type == Area::TYPE_EXIT))
+        if((area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmin].type == Area::TYPE_NONE
+                && area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmax].type == Area::TYPE_NONE)
+                || (area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmin].type == Area::TYPE_DEATH
+                    && area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmax].type == Area::TYPE_DEATH)
+                || (area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmin].type == Area::TYPE_EXIT
+                    && area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmax].type == Area::TYPE_EXIT))
             speed.vy = GRAVITY;
 
 
         return false;
     }
 
-    if(area.gtiles[x][y].type == Area::TYPE_DEATH || outOfBound())
+    if(area.gtiles[x * Game::GAME_WIDTH + y].type == Area::TYPE_DEATH || outOfBound())
     {
         fpos = area.getStart();
         position = area.getStart();
         speed *= 0.0f;
         return false;
     }
-    else if(area.gtiles[x][y].type == Area::TYPE_EXIT)
+    else if(area.gtiles[x * Game::GAME_WIDTH + y].type == Area::TYPE_EXIT)
         return true;
 
-    else if(area.gtiles[x][y].type == Area::TYPE_SOLID)
+    else if(area.gtiles[x * Game::GAME_WIDTH + y].type == Area::TYPE_SOLID)
     {
-        handleCollision(imax, jmax, area.gtiles[x][y]);
+        handleCollision(imax, jmax, area.gtiles[x * Game::GAME_WIDTH + y]);
         return false;
     }
 
