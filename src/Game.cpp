@@ -143,7 +143,7 @@ void Game::status()
 void Game::clean()
 {
     /// @todo clean (necessary?)
-    for(size_t i = 0; i < areas.size(); ++i)
+    for(size_t i = 0; i < shooters.size(); ++i)
     {
         delete shooters[i];
     }
