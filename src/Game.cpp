@@ -144,7 +144,6 @@ bool Game::input()
 
 void Game::physics()
 {
-    /// @todo handle collision detection player bullets
     done = player->status(bullets);
 }
 

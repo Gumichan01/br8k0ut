@@ -24,11 +24,16 @@
 #include "Shooter.hpp"
 #include "Strategy.hpp"
 
+namespace
+{
+const uint32_t DELAY = 2000;
+}
 
 Shooter::Shooter(Game& g, const LX_AABB& rect) : game(g), pos_start(rect),
     shot_strat(nullptr)
 {
     shot_strat = new ShotStrategy(this);
+    shot_strat->setShotDelay(DELAY);
 }
 
 
