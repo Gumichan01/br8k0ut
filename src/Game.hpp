@@ -40,6 +40,8 @@ class LX_Music;
 
 class Area;
 class Player;
+class Shooter;
+//class Bullet;
 
 /// @todo store the start point
 
@@ -52,7 +54,7 @@ class Game
     bool exit_status;
     Player * player;
     std::vector<Area*> areas;
-    //std::vector<Shooter*> shooter;
+    std::vector<Shooter*> shooters;
 
     LX_Win::LX_Window& win;
     LX_Mixer::LX_Music *music;

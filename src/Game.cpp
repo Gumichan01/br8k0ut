@@ -24,6 +24,7 @@
 #include "Game.hpp"
 #include "Area.hpp"
 #include "Player.hpp"
+#include "Shooter.hpp"
 #include "Framerate.hpp"
 
 #include <LunatiX/LX_Window.hpp>
@@ -90,14 +91,14 @@ void Game::loop()
 bool Game::input()
 {
     static bool full = false;
-    bool done = false;
+    bool _done = false;
 
     while(ev.pollEvent())
     {
         switch(ev.getEventType())
         {
         case LX_EventType::LX_QUIT:
-            done = true;
+            _done = true;
             exit_status = true;
             break;
 
@@ -118,7 +119,7 @@ bool Game::input()
 
     player->inputState();
 
-    return done;
+    return _done;
 }
 
 
@@ -134,11 +135,19 @@ void Game::status()
 {
     /// @todo update status (player, bullets)
     player->move();
+
+    for(Shooter *shooter: shooters)
+        shooter->strategy();
 }
 
 void Game::clean()
 {
     /// @todo clean (necessary?)
+    for(size_t i = 0; i < areas.size(); ++i)
+    {
+        delete shooters[i];
+    }
+    shooters.clear();
 }
 
 void Game::display()
