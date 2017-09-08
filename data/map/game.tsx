@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<tileset name="breakout" tilewidth="8" tileheight="8" tilecount="28" columns="0">
+<tileset name="breakout" tilewidth="8" tileheight="8" tilecount="37" columns="0">
  <grid orientation="orthogonal" width="1" height="1"/>
  <tile id="0">
   <image width="8" height="8" source="../image/fond.png"/>
@@ -84,5 +84,32 @@
  </tile>
  <tile id="27" type="solid">
   <image width="8" height="8" source="../image/wallc4.png"/>
+ </tile>
+ <tile id="28">
+  <image width="8" height="8" source="../image/final_fond.png"/>
+ </tile>
+ <tile id="29">
+  <image width="8" height="8" source="../image/final_sky.png"/>
+ </tile>
+ <tile id="30">
+  <image width="8" height="8" source="../image/final_trans1.png"/>
+ </tile>
+ <tile id="31">
+  <image width="8" height="8" source="../image/final_trans2.png"/>
+ </tile>
+ <tile id="32">
+  <image width="8" height="8" source="../image/final_trans3.png"/>
+ </tile>
+ <tile id="33">
+  <image width="8" height="8" source="../image/final_trans4.png"/>
+ </tile>
+ <tile id="34">
+  <image width="8" height="8" source="../image/final_trans5.png"/>
+ </tile>
+ <tile id="35">
+  <image width="8" height="8" source="../image/final_trans6.png"/>
+ </tile>
+ <tile id="36">
+  <image width="8" height="8" source="../image/final_trans7.png"/>
  </tile>
 </tileset>
