@@ -21,48 +21,29 @@
 *   mail: luxon.jean.pierre@gmail.com
 */
 
-#ifndef STRATEGY_H_INCLUDED
-#define STRATEGY_H_INCLUDED
+#include "Bullet.hpp"
 
-class Shooter;
+#include <LunatiX/LX_Texture.hpp>
+#include <LunatiX/LX_Physics.hpp>
+#include <LunatiX/LX_Hitbox.hpp>
 
-namespace LX_Physics
+using namespace LX_Physics;
+
+Bullet::Bullet(LX_Graphics::LX_Sprite *image, LX_AABB& rect)
+    : graphic(image), position(rect), speed(LX_Vector2D(0.0f, 1.0f)) {}
+
+
+void Bullet::draw()
 {
-struct LX_Point;
+    if(graphic != nullptr)
+    {
+        graphic->draw(&position);
+    }
 }
 
-class Strategy
+void Bullet::move()
 {
-protected:
+    position.x += speed.vx;
+    position.y += speed.vy;
+}
 
-    Shooter *target;
-    unsigned int reference_time;
-
-public:
-
-    explicit Strategy(Shooter *s);
-
-    virtual void proceed() = 0;
-    virtual ~Strategy();
-
-};
-
-// Just shoot!
-class ShotStrategy: public Strategy
-{
-protected:
-
-    unsigned int shot_delay;
-
-public:
-
-    explicit ShotStrategy(Shooter *s);
-
-    void setShotDelay(unsigned int delay);
-    void proceed();
-
-    ~ShotStrategy() = default;
-};
-
-
-#endif // STRATEGY_H_INCLUDED

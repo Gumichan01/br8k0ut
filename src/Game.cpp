@@ -25,9 +25,11 @@
 #include "Area.hpp"
 #include "Player.hpp"
 #include "Shooter.hpp"
+#include "Bullet.hpp"
 #include "Framerate.hpp"
 
 #include <LunatiX/LX_Window.hpp>
+#include <LunatiX/LX_Texture.hpp>
 #include <LunatiX/LX_Timer.hpp>
 #include <LunatiX/LX_Mixer.hpp>
 #include <LunatiX/LX_Music.hpp>
@@ -35,7 +37,9 @@
 namespace
 {
 const std::string MUSIC_PATH("data/audio/gumichan01-eastern_wind.ogg");
+const std::string BULLET_PATH("data/image/bullet.png");
 const unsigned short VOLUME = 75;
+LX_Graphics::LX_Sprite *bullet_sp = nullptr;
 }
 
 using namespace LX_Event;
@@ -51,6 +55,7 @@ Game::Game(LX_Win::LX_Window& w) : done(false), lvl_count(0),
 
     LX_Mixer::setOverallVolume(VOLUME);
     music = new LX_Mixer::LX_Music(MUSIC_PATH);
+    bullet_sp = new LX_Graphics::LX_Sprite(BULLET_PATH, win);
 }
 
 
@@ -151,6 +156,9 @@ void Game::status()
 
     for(Shooter *shooter: shooters)
         shooter->strategy();
+
+    for(Bullet *bullet: bullets)
+        bullet->move();
 }
 
 void Game::clean()
@@ -160,17 +168,30 @@ void Game::clean()
     {
         delete shooters[i];
     }
+
+    for(size_t j = 0; j < bullets.size(); ++j)
+    {
+        delete bullets[j];
+    }
+
     shooters.clear();
+    bullets.clear();
 }
 
 void Game::display()
 {
     win.clearWindow();
     areas[lvl_count]->draw();
+    for(Bullet *bullet: bullets) bullet->draw();
     player->draw();
     win.update();
 }
 
+
+void Game::acceptBullet(LX_AABB& bullet_rect)
+{
+    bullets.push_back(new Bullet(bullet_sp, bullet_rect));
+}
 
 Game::~Game()
 {
@@ -182,4 +203,5 @@ Game::~Game()
     areas.clear();
     delete player;
     delete music;
+    delete bullet_sp;
 }

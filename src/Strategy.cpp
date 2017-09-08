@@ -1,6 +1,6 @@
 
 /*
-*   Target_Xplosion - A classic shoot'em up video game
+*   Br8k0ut - Platform Video game
 *   Copyright © 2017  Luxon Jean-Pierre
 *
 *   This program is free software: you can redistribute it and/or modify

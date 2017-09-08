@@ -41,9 +41,10 @@ void Shooter::strategy()
 void Shooter::fire()
 {
     LX_Log::log("FIRE");
+    game.acceptBullet(pos_start);
 }
 
 Shooter::~Shooter()
 {
-
+    delete shot_strat;
 }

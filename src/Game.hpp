@@ -25,6 +25,7 @@
 #define GAME_HPP_INCLUDED
 
 #include <LunatiX/LX_Event.hpp>
+#include <LunatiX/LX_AABB.hpp>
 
 #include <vector>
 
@@ -41,9 +42,8 @@ class LX_Music;
 class Area;
 class Player;
 class Shooter;
-//class Bullet;
+class Bullet;
 
-/// @todo store the start point
 
 class Game
 {
@@ -55,6 +55,7 @@ class Game
     Player * player;
     std::vector<Area*> areas;
     std::vector<Shooter*> shooters;
+    std::vector<Bullet*> bullets;
 
     LX_Win::LX_Window& win;
     LX_Mixer::LX_Music *music;
@@ -77,6 +78,8 @@ public:
     void status();
     void clean();
     void display();
+
+    void acceptBullet(LX_AABB& bullet_rect);
 
     ~Game();
 };
