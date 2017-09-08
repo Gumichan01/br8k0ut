@@ -47,7 +47,7 @@ class Bullet;
 
 class Game
 {
-    static const unsigned int NB_LEVELS = 13;
+    static const unsigned int NB_LEVELS = 16;
 
     bool done;
     unsigned int lvl_count;

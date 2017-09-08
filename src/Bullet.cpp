@@ -30,8 +30,18 @@
 
 using namespace LX_Physics;
 
+namespace
+{
+const int OFFSET = 2;
+}
+
 Bullet::Bullet(LX_Graphics::LX_Sprite *image, LX_AABB& rect)
-    : graphic(image), position(rect), speed(LX_Vector2D(0.0f, 1.0f)) {}
+    : graphic(image), position(rect), speed(LX_Vector2D(0.0f, 1.0f))
+{
+    position.x += 1;
+    position.w -= 2;
+    position.h -= 2;
+}
 
 
 void Bullet::draw()
