@@ -145,13 +145,12 @@ bool Game::input()
 void Game::physics()
 {
     /// @todo handle collision detection player bullets
-    done = player->status();
+    done = player->status(bullets);
 }
 
 
 void Game::status()
 {
-    /// @todo update status (bullets)
     player->move();
 
     for(Shooter *shooter: shooters)
@@ -163,7 +162,6 @@ void Game::status()
 
 void Game::clean()
 {
-    /// @todo clean (necessary?)
     for(size_t i = 0; i < shooters.size(); ++i)
     {
         delete shooters[i];

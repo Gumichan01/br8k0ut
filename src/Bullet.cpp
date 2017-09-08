@@ -22,6 +22,7 @@
 */
 
 #include "Bullet.hpp"
+#include "Game.hpp"
 
 #include <LunatiX/LX_Texture.hpp>
 #include <LunatiX/LX_Physics.hpp>
@@ -45,5 +46,11 @@ void Bullet::move()
 {
     position.x += speed.vx;
     position.y += speed.vy;
+
+    if(position.y > Game::GAME_WIDTH)
+    {
+        if(graphic != nullptr)
+            graphic = nullptr;
+    }
 }
 

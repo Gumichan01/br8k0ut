@@ -24,6 +24,7 @@
 
 #include "Player.hpp"
 #include "Area.hpp"
+#include "Bullet.hpp"
 
 #include <LunatiX/LX_Hitbox.hpp>
 #include <LunatiX/LX_WindowManager.hpp>
@@ -336,9 +337,33 @@ bool Player::outOfBound()
     return !collisionRect(position, game_bound);
 }
 
-
-bool Player::status()
+void Player::restart()
 {
+    fpos = area.getStart();
+    position = area.getStart();
+    speed *= 0.0f;
+}
+
+
+bool Player::bulletCollision(const std::vector<Bullet*>& bullets)
+{
+    for(const Bullet* b : bullets)
+    {
+        if(collisionRect((*b).position, position))
+        {
+            restart();
+            return true;
+        }
+    }
+
+    return false;
+}
+
+bool Player::status(const std::vector<Bullet*>& bullets)
+{
+    if(bulletCollision(bullets))
+        return false;
+
     int x = -1, y = -1;
     bool found = false;
     const int jmin = position.x / TILE_W;
@@ -373,17 +398,16 @@ bool Player::status()
                     && area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmax].type == Area::TYPE_DEATH)
                 || (area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmin].type == Area::TYPE_EXIT
                     && area.gtiles[(imax + 1) * Game::GAME_WIDTH + jmax].type == Area::TYPE_EXIT))
+        {
             speed.vy = GRAVITY;
-
+        }
 
         return false;
     }
 
     if(area.gtiles[x * Game::GAME_WIDTH + y].type == Area::TYPE_DEATH || outOfBound())
     {
-        fpos = area.getStart();
-        position = area.getStart();
-        speed *= 0.0f;
+        restart();
         return false;
     }
     else if(area.gtiles[x * Game::GAME_WIDTH + y].type == Area::TYPE_EXIT)

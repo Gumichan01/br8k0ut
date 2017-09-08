@@ -29,6 +29,8 @@
 #include <LunatiX/LX_Vector2D.hpp>
 #include <LunatiX/LX_Event.hpp>
 
+#include <vector>
+
 
 namespace LX_Graphics
 {
@@ -42,6 +44,7 @@ struct LX_Circle;
 
 class Area;
 struct GTile;
+class Bullet;
 
 struct FloatPosition
 {
@@ -72,6 +75,8 @@ class Player
     void handleCollision(int imax, int jmax, const GTile& tile);
     void adaptDash();
     bool outOfBound();
+    bool bulletCollision(const std::vector<Bullet*>& bullets);
+    void restart();
 
 public:
 
@@ -82,7 +87,7 @@ public:
     void inputState();
 
     void move();
-    bool status();
+    bool status(const std::vector<Bullet*>& bullets);
 
     ~Player();
 };

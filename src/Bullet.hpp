@@ -37,8 +37,11 @@ namespace LX_Physics
 class LX_Vector2D;
 }
 
+class Player;
+
 class Bullet
 {
+    friend class Player;
     LX_Graphics::LX_Sprite * graphic;
     LX_AABB position;
     LX_Physics::LX_Vector2D speed;

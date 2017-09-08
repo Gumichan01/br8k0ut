@@ -24,7 +24,6 @@
 #include "Shooter.hpp"
 #include "Strategy.hpp"
 
-#include <LunatiX/LX_Log.hpp>
 
 Shooter::Shooter(Game& g, const LX_AABB& rect) : game(g), pos_start(rect),
     shot_strat(nullptr)
@@ -40,7 +39,6 @@ void Shooter::strategy()
 
 void Shooter::fire()
 {
-    LX_Log::log("FIRE");
     game.acceptBullet(pos_start);
 }
 
