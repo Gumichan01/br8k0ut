@@ -94,6 +94,41 @@ Area::Area(unsigned int lvl): level_id(lvl)
         tmx.load((MAP_PATH + "06.tmx").c_str());
         break;
 
+    case 7:
+        LX_Log::log("TMX: open ./data/map/07.tmx");
+        tmx.load((MAP_PATH + "07.tmx").c_str());
+        break;
+
+    case 8:
+        LX_Log::log("TMX: open ./data/map/08.tmx");
+        tmx.load((MAP_PATH + "08.tmx").c_str());
+        break;
+
+    case 9:
+        tmx.load((MAP_PATH + "09.tmx").c_str());
+        LX_Log::log("TMX: open ./data/map/09.tmx");
+        break;
+
+    case 10:
+        LX_Log::log("TMX: open ./data/map/10.tmx");
+        tmx.load((MAP_PATH + "10.tmx").c_str());
+        break;
+
+    case 11:
+        LX_Log::log("TMX: open ./data/map/11.tmx");
+        tmx.load((MAP_PATH + "11.tmx").c_str());
+        break;
+
+    case 12:
+        LX_Log::log("TMX: open ./data/map/12.tmx");
+        tmx.load((MAP_PATH + "12.tmx").c_str());
+        break;
+
+    case 13:
+        LX_Log::log("TMX: open ./data/map/13.tmx");
+        tmx.load((MAP_PATH + "13.tmx").c_str());
+        break;
+
     default:
         break;
     }

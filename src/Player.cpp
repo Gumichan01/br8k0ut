@@ -100,6 +100,7 @@ Player::Player(const LX_AABB& pos, const Area& a): sprite(nullptr), fpos(DFPOS),
     sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win);
     fpos = position;
     speed *= 0.0f;
+    speed.vy = GRAVITY;
 }
 
 void Player::draw()
@@ -342,6 +343,7 @@ void Player::restart()
     fpos = area.getStart();
     position = area.getStart();
     speed *= 0.0f;
+    speed.vy = GRAVITY;
 }
 
 
