@@ -10,7 +10,7 @@
  <tile id="2" type="solid">
   <image width="8" height="8" source="../image/gate.png"/>
  </tile>
- <tile id="3" type="death">
+ <tile id="3" type="shot">
   <image width="8" height="8" source="../image/canon.png"/>
  </tile>
  <tile id="4" type="death">

@@ -29,6 +29,7 @@
 
 #include <LunatiX/LX_AABB.hpp>
 #include <array>
+#include <vector>
 #include <string>
 
 namespace LX_Graphics
@@ -73,12 +74,14 @@ public:
     static const std::string TYPE_SOLID;
     static const std::string TYPE_START;
     static const std::string TYPE_DEATH;
+    static const std::string TYPE_SHOT;
     static const std::string TYPE_EXIT;
 
     Area(unsigned int lvl);
     void draw();
 
     const LX_AABB getStart() const;
+    void getCanons(std::vector<LX_AABB>& v);
 
     ~Area();
 };

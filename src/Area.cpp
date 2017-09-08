@@ -51,6 +51,7 @@ const std::string Area::TYPE_NONE = "none";
 const std::string Area::TYPE_SOLID = "solid";
 const std::string Area::TYPE_START ="start";
 const std::string Area::TYPE_DEATH = "death";
+const std::string Area::TYPE_SHOT = "shot";
 const std::string Area::TYPE_EXIT = "exit";
 
 
@@ -186,10 +187,10 @@ void Area::parseMap(const std::string& map_string)
 
 void Area::draw()
 {
-        for(GTile& tile: gtiles)
-        {
-            sprites[tile.id_sprite]->draw(&tile.rect);
-        }
+    for(GTile& tile: gtiles)
+    {
+        sprites[tile.id_sprite]->draw(&tile.rect);
+    }
 }
 
 
@@ -213,6 +214,15 @@ const LX_AABB Area::getStart() const
         return aabb;
 
     throw std::string("An area must have a start point");
+}
+
+void Area::getCanons(std::vector<LX_AABB>& v)
+{
+    for(GTile& tile: gtiles)
+    {
+        if(tile.type == TYPE_SHOT)
+            v.push_back(tile.rect);
+    }
 }
 
 
