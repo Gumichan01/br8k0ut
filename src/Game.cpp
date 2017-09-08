@@ -70,9 +70,22 @@ void Game::play()
 }
 
 
+void Game::loadShooters()
+{
+    std::vector<LX_AABB> boxes;
+    areas[lvl_count]->getCanons(boxes);
+
+    for(const LX_AABB& b : boxes)
+    {
+        shooters.push_back(new Shooter(*this, b));
+    }
+}
+
 void Game::loop()
 {
     done = false;
+    loadShooters();
+
     while(!done)
     {
         if((done = input()) == true)
@@ -126,14 +139,14 @@ bool Game::input()
 
 void Game::physics()
 {
-    /// @todo handle collision detection, gravity
+    /// @todo handle collision detection player bullets
     done = player->status();
 }
 
 
 void Game::status()
 {
-    /// @todo update status (player, bullets)
+    /// @todo update status (bullets)
     player->move();
 
     for(Shooter *shooter: shooters)

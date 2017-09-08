@@ -60,8 +60,7 @@ class Game
     LX_Mixer::LX_Music *music;
     LX_Event::LX_EventHandler ev;
 
-    /// @todo Player, entity, shooter
-    /// @todo Music
+    void loadShooters();
 
 public:
 

@@ -34,6 +34,7 @@ class Shooter
 {
     Game& game;
     LX_AABB pos_start;
+    ShotStrategy * shot_strat;
 
 public:
 
