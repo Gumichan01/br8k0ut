@@ -45,7 +45,7 @@ LX_Graphics::LX_Sprite *bullet_sp = nullptr;
 using namespace LX_Event;
 
 
-Game::Game(LX_Win::LX_Window& w) : done(false), lvl_count(15),
+Game::Game(LX_Win::LX_Window& w) : done(false), lvl_count(0),
     exit_status(false), player(nullptr), win(w), music(nullptr)
 {
     for(unsigned int i = 1; i <= NB_LEVELS; ++i)

@@ -35,6 +35,8 @@
 namespace LX_Graphics
 {
 class LX_Sprite;
+class LX_StreamingTexture;
+class LX_BufferedImage;
 }
 
 struct GTile
@@ -43,7 +45,7 @@ struct GTile
     unsigned int id_sprite;
     std::string type;
     LX_AABB rect;
-    LX_Graphics::LX_Sprite *sp;
+    //LX_Graphics::LX_Sprite *sp;
 };
 
 struct Type
@@ -62,8 +64,10 @@ class Area
     friend class Player;
     unsigned int level_id;
     std::vector<Type*> vtypes;
-    std::vector<LX_Graphics::LX_Sprite*> sprites;
+    std::vector<LX_Graphics::LX_BufferedImage*> bimages;
+    //std::vector<LX_Graphics::LX_Sprite*> sprites;
     std::array<GTile, Game::GAME_HEIGHT * Game::GAME_WIDTH> gtiles;
+    LX_Graphics::LX_StreamingTexture *map_texture;
 
     void parseMap(const std::string& map_string);
 

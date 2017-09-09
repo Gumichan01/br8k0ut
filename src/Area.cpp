@@ -170,7 +170,8 @@ Area::Area(unsigned int lvl): level_id(lvl)
     for(TSX::Parser::Tile& tile: tsx.tileList)
     {
         LX_Log::log("Tile: %d - %s", tile.id, (MAP_PATH + tile.img.name).c_str());
-        sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_RGB888));
+        //sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_RGB888));
+        bimages.push_back(new LX_BufferedImage(MAP_PATH + tile.img.name, LX_PIXELFORMAT_RGB888));
         Type *t = new Type();
         *t = {tile.id + 1, tile.type};
         vtypes.push_back(t);
@@ -191,6 +192,16 @@ Area::Area(unsigned int lvl): level_id(lvl)
             gtiles[i * Game::GAME_WIDTH + j].rect.h = SPRITE_H;
         }
     }
+
+    map_texture = new LX_Graphics::LX_StreamingTexture(*win);
+
+    // map the sprites on a streming texture
+    for(GTile& tile: gtiles)
+    {
+        map_texture->blit(*bimages[tile.id_sprite], tile.rect);
+    }
+
+    map_texture->update();
 }
 
 void Area::parseMap(const std::string& map_string)
@@ -236,10 +247,7 @@ void Area::parseMap(const std::string& map_string)
 
 void Area::draw()
 {
-    for(GTile& tile: gtiles)
-    {
-        sprites[tile.id_sprite]->draw(&tile.rect);
-    }
+    map_texture->draw();
 }
 
 
@@ -277,16 +285,23 @@ void Area::getCanons(std::vector<LX_AABB>& v)
 
 Area::~Area()
 {
-    for(size_t i = 0; i < sprites.size(); ++i)
+    /*for(size_t i = 0; i < sprites.size(); ++i)
     {
         delete sprites[i];
-    }
+    }*/
 
     for(size_t j = 0; j < vtypes.size(); ++j)
     {
         delete vtypes[j];
     }
 
-    sprites.clear();
+    for(size_t k = 0; k < bimages.size(); ++k)
+    {
+        delete bimages[k];
+    }
+
+    //sprites.clear();
     vtypes.clear();
+    bimages.clear();
+    delete map_texture;
 }
