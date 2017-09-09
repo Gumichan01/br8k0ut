@@ -32,6 +32,8 @@
 #include <LunatiX/LX_Physics.hpp>
 #include <LunatiX/LX_Log.hpp>
 
+#include <cstdio>
+#include <ctime>
 
 namespace
 {
@@ -48,6 +50,27 @@ const int DASH_STEP = 8;
 const float DASH_M = 8.0f;
 
 bool slow = true;
+
+void screenshot()
+{
+    LX_Win::LX_Window *win = LX_Win::LX_WindowManager::getInstance()->getWindow(1);
+
+    if(win != nullptr && LX_Log::isDebugMode())
+    {
+        static int id_screen = 1;
+
+        const size_t SZ = 256;
+        char datestr[SZ] = {'\0'};
+        char name[SZ] = {'\0'};
+
+        time_t t = time(nullptr);
+        struct tm *tmp = localtime(&t);
+
+        strftime(datestr, SZ, "%Y-%m-%d_%H-%M-%S-tx", tmp);
+        sprintf(name, "%s-%d.png", datestr, id_screen++);
+        win->screenshot(name);
+    }
+}
 }
 
 using namespace LX_Win;
@@ -180,6 +203,10 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
         else if(ev.getKeyCode() == SDLK_LSHIFT)
         {
             dash = true;
+        }
+        else if(ev.getKeyCode() == SDLK_p)
+        {
+            screenshot();
         }
     }
 }
