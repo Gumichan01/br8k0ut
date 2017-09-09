@@ -65,3 +65,8 @@ void Bullet::move()
     }
 }
 
+const LX_AABB& Bullet::getPosition() const
+{
+    return position;
+}
+

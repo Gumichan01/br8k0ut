@@ -155,8 +155,20 @@ void Game::status()
     for(Shooter *shooter: shooters)
         shooter->strategy();
 
-    for(Bullet *bullet: bullets)
-        bullet->move();
+    for(size_t i = 0; i< bullets.size(); ++i)
+    {
+        const LX_AABB& pos = bullets[i]->getPosition();
+
+        if(pos.y > GAME_HEIGHT)
+        {
+            delete bullets[i];
+            bullets.erase(bullets.begin() + i);
+            i--;
+            continue;
+        }
+
+        bullets[i]->move();
+    }
 }
 
 void Game::clean()

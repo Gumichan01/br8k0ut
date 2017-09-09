@@ -53,6 +53,7 @@ public:
 
     void draw();
     void move();
+    const LX_AABB& getPosition() const;
     virtual ~Bullet() = default;
 };
 
