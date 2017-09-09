@@ -183,7 +183,6 @@ Area::Area(unsigned int lvl): level_id(lvl)
 
     for(size_t i = 0; i < Game::GAME_HEIGHT; ++i)
     {
-
         for(size_t j = 0; j < Game::GAME_WIDTH; ++j)
         {
             gtiles[i * Game::GAME_WIDTH + j].rect.x = j * SPRITE_W;
