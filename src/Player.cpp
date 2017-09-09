@@ -38,16 +38,14 @@ namespace
 const FloatPosition DFPOS = {0.0f, 0.0f};
 const std::string PLAYER_PATH("./data/image/player.png");
 
-const float MAX_SPEED = 4.0f;
-const float STEP_UP   = 0.5f;
-const float STEP_DOWN = 1.0f;
+const float MAX_SPEED = 2.0f;
+const float STEP_UP   = 0.25f;
+const float STEP_DOWN = 0.5f;
 
-const float GRAVITY   = 2.98f;
-const float JUMP      = -8.0f;
-const float JUMP_STEP = 1.0f;
-const float DASH = 24.0f;
+const float GRAVITY   = 0.98f;
+const float DASH = 28.0f;
 const int DASH_STEP = 8;
-const int DASH_M = 8;
+const float DASH_M = 8.0f;
 
 bool slow = true;
 }
@@ -341,7 +339,8 @@ bool Player::outOfBound()
 void Player::restart()
 {
     fpos = area.getStart();
-    position = area.getStart();
+    fpos.y += 1.0f;
+    fpos.toPixelUnit(position);
     speed *= 0.0f;
     speed.vy = GRAVITY;
 }
