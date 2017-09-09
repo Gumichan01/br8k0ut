@@ -45,6 +45,7 @@ class Bullet
     LX_Graphics::LX_Sprite * graphic;
     LX_AABB position;
     LX_Physics::LX_Vector2D speed;
+    float y;
 
 public:
 

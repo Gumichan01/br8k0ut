@@ -36,7 +36,7 @@ const int OFFSET = 2;
 }
 
 Bullet::Bullet(LX_Graphics::LX_Sprite *image, LX_AABB& rect)
-    : graphic(image), position(rect), speed(LX_Vector2D(0.0f, 1.0f))
+    : graphic(image), position(rect), speed(LX_Vector2D(0.0f, 0.98f)), y(rect.y)
 {
     position.x += 1;
     position.w -= 2;
@@ -55,7 +55,8 @@ void Bullet::draw()
 void Bullet::move()
 {
     position.x += speed.vx;
-    position.y += speed.vy;
+    y += speed.vy;
+    position.y = y;
 
     if(position.y > Game::GAME_WIDTH)
     {
