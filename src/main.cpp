@@ -56,6 +56,7 @@ int main(int argc, char** argv)
 
     LX_Win::LX_Window w(info);
     LX_Win::LX_WindowManager::getInstance()->addWindow(&w);
+    LX_Device::mouseCursorDisplay(LX_Device::LX_MOUSE_HIDE);
 
     {
         Game g(w);
