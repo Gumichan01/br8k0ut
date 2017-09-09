@@ -42,24 +42,8 @@ const std::string MAP_PATH("./data/map/");
 const int SPRITE_W = 8;
 const int SPRITE_H = 8;
 
-}
-
-using namespace LX_Graphics;
-using namespace LX_Win;
-
-const std::string Area::TYPE_NONE = "none";
-const std::string Area::TYPE_SOLID = "solid";
-const std::string Area::TYPE_START ="start";
-const std::string Area::TYPE_DEATH = "death";
-const std::string Area::TYPE_SHOT = "shot";
-const std::string Area::TYPE_EXIT = "exit";
-
-
-Area::Area(unsigned int lvl): level_id(lvl)
+void loadLevel(unsigned int lvl, TMX::Parser& tmx)
 {
-    TMX::Parser tmx;
-
-    LX_Log::log("TMX");
     switch(lvl)
     {
     case 1:
@@ -147,6 +131,28 @@ Area::Area(unsigned int lvl): level_id(lvl)
     default:
         break;
     }
+}
+
+std::vector<LX_Graphics::LX_BufferedImage*> bimages;
+
+}
+
+using namespace LX_Graphics;
+using namespace LX_Win;
+
+const std::string Area::TYPE_NONE = "none";
+const std::string Area::TYPE_SOLID = "solid";
+const std::string Area::TYPE_START ="start";
+const std::string Area::TYPE_DEATH = "death";
+const std::string Area::TYPE_SHOT = "shot";
+const std::string Area::TYPE_EXIT = "exit";
+
+Area::Area(unsigned int lvl): level_id(lvl)
+{
+    TMX::Parser tmx;
+
+    LX_Log::log("TMX");
+    loadLevel(lvl, tmx);
 
     LX_Log::log("Map Version: %s", tmx.mapInfo.version.c_str());
     LX_Log::log("Tileset [ Source: %s ]", tmx.tilesetList[0].source.c_str());
@@ -159,25 +165,24 @@ Area::Area(unsigned int lvl): level_id(lvl)
 
     LX_Log::log("END TMX\n");
 
-    LX_Log::log("TSX");
-    LX_Log::log("TSX: open %s", (MAP_PATH + tmx.tilesetList[0].source).c_str());
-    TSX::Parser tsx;
-    tsx.load(std::string(MAP_PATH + tmx.tilesetList[0].source).c_str());
-
-    LX_Log::log("Name: %s", tsx.tileset.name.c_str());
-    LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
-
-    for(TSX::Parser::Tile& tile: tsx.tileList)
     {
-        LX_Log::log("Tile: %d - %s", tile.id, (MAP_PATH + tile.img.name).c_str());
-        //sprites.push_back(new LX_Sprite(MAP_PATH + tile.img.name, *win, LX_PIXELFORMAT_RGB888));
-        bimages.push_back(new LX_BufferedImage(MAP_PATH + tile.img.name, LX_PIXELFORMAT_RGB888));
-        Type *t = new Type();
-        *t = {tile.id + 1, tile.type};
-        vtypes.push_back(t);
-    }
+        LX_Log::log("TSX");
+        LX_Log::log("TSX: open %s", (MAP_PATH + tmx.tilesetList[0].source).c_str());
+        TSX::Parser tsx;
+        tsx.load(std::string(MAP_PATH + tmx.tilesetList[0].source).c_str());
+        LX_Log::log("Name: %s", tsx.tileset.name.c_str());
 
-    LX_Log::log("END TSX\n");
+        for(TSX::Parser::Tile& tile: tsx.tileList)
+        {
+            LX_Log::log("Tile: %d - %s", tile.id, (MAP_PATH + tile.img.name).c_str());
+            bimages.push_back(new LX_BufferedImage(MAP_PATH + tile.img.name, LX_PIXELFORMAT_RGB888));
+            Type *t = new Type();
+            *t = {tile.id + 1, tile.type};
+            vtypes.push_back(t);
+        }
+
+        LX_Log::log("END TSX\n");
+    }
 
     /// Convert the map
     parseMap(tmx.tileLayer[it->first].data.contents);
@@ -193,15 +198,7 @@ Area::Area(unsigned int lvl): level_id(lvl)
         }
     }
 
-    map_texture = new LX_Graphics::LX_StreamingTexture(*win);
-
-    // map the sprites on a streming texture
-    for(GTile& tile: gtiles)
-    {
-        map_texture->blit(*bimages[tile.id_sprite], tile.rect);
-    }
-
-    map_texture->update();
+    generateMap();
 }
 
 void Area::parseMap(const std::string& map_string)
@@ -226,7 +223,7 @@ void Area::parseMap(const std::string& map_string)
             gtiles[acount * Game::GAME_WIDTH + j].id_tile = std::atoi(it->str().c_str());
             gtiles[acount * Game::GAME_WIDTH + j].id_sprite = gtiles[acount * Game::GAME_WIDTH + j].id_tile - 1;
 
-            int tmp_id = gtiles[acount * Game::GAME_WIDTH + j].id_tile;
+            unsigned int tmp_id = gtiles[acount * Game::GAME_WIDTH + j].id_tile;
             auto itf = std::find_if(vtypes.begin(), vtypes.end(), [&tmp_id](const Type* ty)
             {
                 return ty->id == tmp_id;
@@ -243,6 +240,27 @@ void Area::parseMap(const std::string& map_string)
 
         acount++;
     }
+}
+
+
+void Area::generateMap()
+{
+    LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
+    map_texture = new LX_Graphics::LX_StreamingTexture(*win);
+
+    // map the sprites on a streming texture
+    for(GTile& tile: gtiles)
+    {
+        map_texture->blit(*bimages[tile.id_sprite], tile.rect);
+    }
+
+    map_texture->update();
+
+    for(size_t k = 0; k < bimages.size(); ++k)
+    {
+        delete bimages[k];
+    }
+    bimages.clear();
 }
 
 void Area::draw()
@@ -285,23 +303,11 @@ void Area::getCanons(std::vector<LX_AABB>& v)
 
 Area::~Area()
 {
-    /*for(size_t i = 0; i < sprites.size(); ++i)
-    {
-        delete sprites[i];
-    }*/
-
     for(size_t j = 0; j < vtypes.size(); ++j)
     {
         delete vtypes[j];
     }
 
-    for(size_t k = 0; k < bimages.size(); ++k)
-    {
-        delete bimages[k];
-    }
-
-    //sprites.clear();
     vtypes.clear();
-    bimages.clear();
     delete map_texture;
 }
