@@ -26,7 +26,7 @@
 
 namespace
 {
-const uint32_t DELAY = 2000;
+const uint32_t DELAY = 1500;
 }
 
 Shooter::Shooter(Game& g, const LX_AABB& rect) : game(g), pos_start(rect),
