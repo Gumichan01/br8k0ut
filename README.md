@@ -6,7 +6,12 @@
 
 Br8k0ut is a platformer video game I made in the context of the [UOGBJAM](https://itch.io/jam/unofficial-gbjam1).
 
-This game jam was a good opportunity to make something different from what I have done before and to learn new things, such as tile mapping, and some others things specific to a platformer video game.
+This game jam was a good opportunity to make something different from what
+I have done before and to learn new things, such as tile mapping,
+and some others things specific to a platformer video game.
+
+This game was developed in C++ and uses [LunatiX](https://github.com/Gumichan01/lunatix) and
+[TMXParser](https://github.com/Gumichan01/TMXParser)/[TSXParser](https://github.com/Gumichan01/TSXParser)
 
 ## Game system ##
 
