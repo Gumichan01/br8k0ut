@@ -32,6 +32,8 @@ namespace
 
 const int GAME_WIDTH = 160;
 const int GAME_HEIGHT = 144;
+const std::string GAME_TITLE("Br8k0ut");
+const std::string GAME_ICON("data/image/icon.ico");
 
 }
 
@@ -45,16 +47,17 @@ int main(int argc, char** argv)
         return -1;
     }
 
-    LX_Log::setDebugMode();     /// Remove it in realease mode
+    //LX_Log::setDebugMode();     /// Remove it in realease mode
 
     // Information about how to build the window
     LX_Win::LX_WindowInfo info;
     LX_Win::LX_loadWindowConfig(info);
-    info.title = "Br8k0ut";
+    info.title = GAME_TITLE;
     info.w = GAME_WIDTH;
     info.h = GAME_HEIGHT;
 
     LX_Win::LX_Window w(info);
+    w.setIcon(GAME_ICON);
     LX_Win::LX_WindowManager::getInstance()->addWindow(&w);
     LX_Device::mouseCursorDisplay(LX_Device::LX_MOUSE_HIDE);
 
