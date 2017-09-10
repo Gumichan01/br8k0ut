@@ -30,6 +30,7 @@
 #include <LunatiX/LX_WindowManager.hpp>
 #include <LunatiX/LX_Graphics.hpp>
 #include <LunatiX/LX_Physics.hpp>
+#include <LunatiX/LX_Chunk.hpp>
 #include <LunatiX/LX_Log.hpp>
 
 #include <cstdio>
@@ -39,12 +40,13 @@ namespace
 {
 const FloatPosition DFPOS = {0.0f, 0.0f};
 const std::string PLAYER_PATH("./data/image/player.png");
+const std::string JUMP_PATH("./data/audio/jump.wav");
 
 const float MAX_SPEED = 2.0f;
 const float STEP_UP   = 0.25f;
 const float STEP_DOWN = 0.5f;
 
-const float GRAVITY   = 0.98f;
+const float GRAVITY   = 1.48f;
 const float DASH = 28.0f;
 const int DASH_STEP = 8;
 const float DASH_M = 8.0f;
@@ -114,11 +116,12 @@ void FloatPosition::toPixelUnit(LX_AABB& aabb)
 
 /// Player
 
-Player::Player(const LX_AABB& pos, const Area& a): sprite(nullptr), fpos(DFPOS),
-    position(pos), area(a), dash(false)
+Player::Player(const LX_AABB& pos, const Area& a): sprite(nullptr),
+    sound(nullptr), fpos(DFPOS), position(pos), area(a), dash(false)
 {
     LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
     sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win);
+    sound = new LX_Mixer::LX_Chunk(JUMP_PATH);
     fpos = position;
     speed *= 0.0f;
     speed.vy = GRAVITY;
@@ -203,6 +206,7 @@ void Player::input(const LX_Event::LX_EventHandler& ev)
         else if(ev.getKeyCode() == SDLK_LSHIFT)
         {
             dash = true;
+            sound->play();
         }
         else if(ev.getKeyCode() == SDLK_p)
         {
@@ -453,6 +457,7 @@ bool Player::status(const std::vector<Bullet*>& bullets)
 
 Player::~Player()
 {
+    delete sound;
     delete sprite;
 }
 

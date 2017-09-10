@@ -42,6 +42,11 @@ namespace LX_Physics
 struct LX_Circle;
 }
 
+namespace LX_Mixer
+{
+struct LX_Chunk;
+}
+
 class Area;
 struct GTile;
 class Bullet;
@@ -66,6 +71,7 @@ struct FloatPosition
 class Player
 {
     LX_Graphics::LX_Sprite *sprite;
+    LX_Mixer::LX_Chunk *sound;
     FloatPosition fpos;
     LX_AABB position;
     LX_Physics::LX_Vector2D speed;
