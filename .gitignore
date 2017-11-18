@@ -36,3 +36,5 @@ obj/
 *.cbp
 br8k0ut.depend
 br8k0ut.layout
+include/GL/
+include/SDL2/
