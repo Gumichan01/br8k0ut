@@ -22,6 +22,7 @@
 */
 
 #include "Area.hpp"
+#include "WinID.hpp"
 
 #include <LunatiX/LX_Graphics.hpp>
 #include <LunatiX/LX_WindowManager.hpp>
@@ -245,7 +246,7 @@ void Area::parseMap(const std::string& map_string)
 
 void Area::generateMap()
 {
-    LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
+    LX_Window *win = LX_WindowManager::getInstance()->getWindow(WinID::getWinID());
     map_texture = new LX_Graphics::LX_StreamingTexture(*win);
 
     // map the sprites on a streming texture

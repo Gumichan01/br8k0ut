@@ -24,6 +24,7 @@
 #include <LunatiX/Lunatix.hpp>
 
 #include "Game.hpp"
+#include "WinID.hpp"
 
 using namespace LX_Event;
 
@@ -58,7 +59,7 @@ int main(int argc, char** argv)
 
     LX_Win::LX_Window w(info);
     w.setIcon(GAME_ICON);
-    LX_Win::LX_WindowManager::getInstance()->addWindow(&w);
+    WinID::setWinID(LX_Win::LX_WindowManager::getInstance()->addWindow(&w));
     LX_Device::mouseCursorDisplay(LX_Device::LX_MOUSE_HIDE);
 
     // play
