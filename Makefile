@@ -99,7 +99,7 @@ endif
 
 %.o: %.cpp
 	@echo $@" - Compiling "$<
-	@$(CC) -c -o $@ $< -I $(SDL2_I_PATH) -I $(LIB_I_PATH) $(CFLAGS)
+	@$(CC) -c -o $@ $< -I $(SDL2_I_PATH) -I $(LIB_I_PATH) $(CFLAGS) $(OPTIMIZE)
 
 #
 # Clean
