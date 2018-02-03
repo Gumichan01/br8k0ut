@@ -147,7 +147,7 @@ const std::string Area::TYPE_DEATH = "death";
 const std::string Area::TYPE_SHOT = "shot";
 const std::string Area::TYPE_EXIT = "exit";
 
-Area::Area(unsigned int lvl): level_id(lvl)
+Area::Area(unsigned int lvl): level_id(lvl), vtypes(), gtiles(), map_texture(nullptr)
 {
     TMX::Parser tmx;
 
