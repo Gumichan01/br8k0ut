@@ -25,6 +25,7 @@
 #include "Player.hpp"
 #include "Area.hpp"
 #include "Bullet.hpp"
+#include "WinID.hpp"
 
 #include <LunatiX/LX_Hitbox.hpp>
 #include <LunatiX/LX_WindowManager.hpp>
@@ -119,7 +120,7 @@ void FloatPosition::toPixelUnit(LX_AABB& aabb)
 Player::Player(const LX_AABB& pos, const Area& a): sprite(nullptr),
     sound(nullptr), fpos(DFPOS), position(pos), area(a), dash(false)
 {
-    LX_Window *win = LX_WindowManager::getInstance()->getWindow(1);
+    LX_Window *win = LX_WindowManager::getInstance()->getWindow(WinID::getWinID());
     sprite = new LX_Graphics::LX_Sprite(PLAYER_PATH, *win);
     sound = new LX_Mixer::LX_Chunk(JUMP_PATH);
     fpos = position;
@@ -460,11 +461,3 @@ Player::~Player()
     delete sound;
     delete sprite;
 }
-
-
-
-
-
-
-
-
