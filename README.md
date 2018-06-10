@@ -1,6 +1,6 @@
 # br8k0ut #
 
-8-bit Platform game for Windows
+8-bit Platform game for Windows.
 
 ## About ##
 
